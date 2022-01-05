@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title> Liquor :: kavata</title>
+	<!-- for-mobile-apps -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="Rwanda's Best Online Liquor Store | KAVATA" />
+	<meta name="description" content="Kavata is an online platform where you can find any liquor you want." />
+	<script
+		type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<!-- //for-mobile-apps -->
+	<link href="css/main.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+	<!-- js -->
+	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+	<!-- js -->
+	<!-- start-smoth-scrolling -->
+	<script type="text/javascript" src="js/move-top.js"></script>
+	<script type="text/javascript" src="js/easing.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function ($) {
+			$(".scroll").click(function (event) {
+				event.preventDefault();
+				$('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+			});
+		});
+	</script>
+	<!-- start-smoth-scrolling -->
+</head>
+
+<body onload="startOrder()">
+	<!-- start-header -->
+	<div id="header"></div>
+	<script>
+	$(function(){
+		$("#header").load('/menu');
+	});
+	</script>
+	<!-- end-header -->
+	<!-- start banner -->
+	<div class="banner page-head">
+	</div>
+	<!-- beer-page -->
+	<div class="beer">
+		<div class="container">
+			<div class="col-md-9 beer-left">
+				<div class="col-md-4 beer-info">
+					<!-- beer to order -->
+				</div>
+				<div class="col-md-8 coment-form">
+					<h4>Fill the Required information to order</h4>
+					<label style='color: red' id='error'></label>
+					<div>
+						<input type="text" id='names' placeholder="full names" required="">
+						<input type="tel" id='phone' placeholder="phone" required="">
+						<input type="text" id='location' placeholder="Location" required="">
+						<input type="email" id='email' placeholder="email" required="">
+						<input type="submit" onclick="placeOrder(this)" value="PLACE ORDER">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 single-page-right top-stiky">
+				<div class="category beer-ctgry">
+					<div class="list-group">
+						<a onclick="setBeerID(1)" class="list-group-item">Whisky</a>
+						<a onclick="setBeerID(2)" class="list-group-item">Vodka</a>
+						<a onclick="setBeerID(3)" class="list-group-item">Cognac</a>
+						<a onclick="setBeerID(4)" class="list-group-item">Rum</a>
+						<a onclick="setBeerID(5)" class="list-group-item">gin</a>
+						<a onclick="setBeerID(6)" class="list-group-item">Cream & COFFEE Liquor</a>
+						<a onclick="setBeerID(7)" class="list-group-item">Tequila</a>
+						<a onclick="setBeerID(8)" class="list-group-item">Aperif Liquors</a>
+						<a onclick="setBeerID(9)" class="list-group-item">Red Wine</a>
+						<a onclick="setBeerID(10)" class="list-group-item">White Wine</a>
+						<a onclick="setBeerID(11)" class="list-group-item">Rose Wine</a>
+					</div>
+				</div>
+			</div>
+			<div class="recent-beers">
+				<!-- other beers -->
+				
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+	<!--//beer-->
+
+	<!-- //beer-page -->
+	 <!-- footer -->
+	 <div id="footer"></div>
+	 <script>
+	 $(function(){
+		 $("#footer").load('/footer');
+	 });
+	 </script>
+	 <!-- //footer -->
+	<!-- here stars scrolling icon -->
+	<script type="text/javascript">
+		$(document).ready(function () {
+			/*
+			var defaults = {
+					containerID: 'toTop', // fading element id
+				containerHoverID: 'toTopHover', // fading element hover id
+				scrollSpeed: 1200,
+				easingType: 'linear' 
+				};
+			*/
+
+			$().UItoTop({ easingType: 'easeOutQuart' });
+
+		});
+	</script>
+	<!-- //here ends scrolling icon -->
+	<script src="js/scripts.js"></script>
+</body>
+
+</html>

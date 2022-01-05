@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Welcome :: KAVATA</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Rwanda's Best Online Liquor Store | KAVATA" />
+    <meta name="description" content="KAVATA is an online platform where you can find any liquor you want." />
+    <script
+        type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- //for-mobile-apps -->
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- js -->
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <!-- js -->
+    <!-- start-smoth-scrolling -->
+    <script type="text/javascript" src="js/move-top.js"></script>
+    <script type="text/javascript" src="js/easing.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+            });
+        });
+    </script>
+    <!-- start-smoth-scrolling -->
+
+</head>
+
+<body onload="getUser(this)">
+    <!-- start-header -->
+    <div id="header"></div>
+	<script>
+	$(function(){
+		$("#header").load('/menu');
+	});
+	</script>
+    <!-- end-header -->
+    <!-- start banner -->
+    <div class="banner page-head">
+    </div>
+    <!-- home-page -->
+    <div class="container myaccount">
+        <div class="category col-md-2 top-stiky">
+            <div class="list-group">
+                <a onclick="MyProfile()" id='myname' class="list-group-item">My Profile</a>
+                <a onclick="newBeer()" class="list-group-item">Add Beer</a>
+                <a onclick="allBeers()" class="list-group-item">All beers</a>
+                <a onclick="Logout()" class="list-group-item">Logout</a>
+            </div>
+        </div>
+        <div class="col-md-10 coment-form">
+            <div id="newItem">
+                <div class="col-md-12">
+                        <h4>ADD NEW BEER</h4>
+                        <label style='color: red' id='error'></label>
+                    <input type="text" id='lname' placeholder="Beer name " required="">
+                    </div>
+                    <div class="col-md-6">
+                        <select id="category">
+                           <option value="">--Select category--</option>
+                            <option value="1">Whisky</option>
+                            <option value="2">Cognac</option>
+                            <option value="3">Vodka</option>
+                            <option value="4">Gin</option>
+                            <option value="5">Rum</option>
+                            <option value="6">Cream&Coffe</option>
+                            <option value="7">Tequila</option>
+                            <option value="8">Aperif liquor</option>
+                            <option value="9">Red wine</option>
+                            <option value="10">White Wine</option>
+                            <option value="11">Rose Wine</option>
+                            <option value="12">Sparking Wine</option>
+                            <option value="13">Sweet and Dessert Wine</option>
+                            <option value="14">Fanta</option>
+                            <option value="15">Juice</option>
+                            <option value="16">Water</option>
+                            <option value="17">Other</option>
+                        </select>
+                    <input type="text" id='image' placeholder="image Url" required="">
+                </div>
+                <div class="col-md-6">
+                    <input type="tel" id='price' placeholder="price" required="">
+
+                    <input type="submit" onclick="addNewBeer(this)" id='formBtn' value="ADD">
+                </div>
+            </div>
+            <di id="itemList">
+                <div class="table-wrapper">
+                        <div class="search-box">
+                                <input type="text" id="b_search" onkeyup="beersFilter()" placeholder="Search any beer info.."
+                                    title="Type to find beer info">
+                        </div>
+                    <table class="fl-table">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Beer Name</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                        </tr>
+                        </thead>
+                        <tbody id='all_beers_list'>
+                        <tr id='loading'>
+                            <td>loading...</td>
+                            <td>loading...</td>
+                            <td>loading...</td>
+                            <td>loading...</td>
+                            <td>loading</td>
+                            <td>...</td>
+                        </tr>
+                        <tbody>
+                    </table>
+                </div>
+            </di>
+        </div>
+    </div>
+    <!-- //contact-page -->
+     <!-- footer -->
+     <div id="footer"></div>
+     <script>
+     $(function(){
+         $("#footer").load('/footer');
+     });
+     </script>
+     <!-- //footer -->
+    <!-- here stars scrolling icon -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /*
+            var defaults = {
+                    containerID: 'toTop', // fading element id
+                containerHoverID: 'toTopHover', // fading element hover id
+                scrollSpeed: 1200,
+                easingType: 'linear' 
+                };
+            */
+
+            $().UItoTop({ easingType: 'easeOutQuart' });
+
+        });
+    </script>
+    <!-- //here ends scrolling icon -->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Kavata | contact</title>
+<!-- for-mobile-apps -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Rwanda's Best Online Liquor Store | KAVATA"/>
+<meta name="description" content="KAVATA is an online platform where you can find any liquor you want." />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- //for-mobile-apps -->	
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+<!-- js -->
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<!-- js -->
+<!-- start-smoth-scrolling -->
+<script type="text/javascript" src="js/move-top.js"></script>
+<script type="text/javascript" src="js/easing.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+    $(".scroll").click(function(event){		
+        event.preventDefault();
+        $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+    });
+});
+</script>
+<!-- start-smoth-scrolling -->
+
+</head>
+<body>
+<!-- start-header -->
+<div id="header"></div>
+	<script>
+	$(function(){
+		$("#header").load('/menu');
+	});
+	</script>
+<!-- end-header -->
+<!-- start banner -->
+<div class="banner page-head">
+</div>
+<!-- contact-page -->
+	<div class="contact">
+		<div class="container">
+			<!-- <div class="contact-info">
+				<h3>VIEW ON MAP</h3>
+			</div>
+			<div class="contact-map">
+				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.8422844238744!2d30.10545788710998!3d-1.9793130774235403!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca633f8573133%3A0x9893b7ef976458e7!2sIsange%20Group%20Ltd!5e0!3m2!1sen!2srw!4v1578600176423!5m2!1sen!2srw" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+			</div> -->
+			<div class="contact-form">
+				<div class="contact-info">
+					<h3>CONTACT US</h3>
+					<div class="strip-line"></div>
+				</div>
+				<form>
+						<div class="category beer-ctgry">
+								<div class="list-group">
+									<a  class="list-group-item">E-mail: info@kavata.rw</a>
+									<a class="list-group-item">Phone(+25): 0788807733/0789195753</a>
+								</div>
+							</div>
+					<div class="contact-left">
+						<input type="text" placeholder="Name" required>
+						<input type="text" placeholder="E-mail" required>
+						<input type="text" placeholder="Subject" required>
+					</div>
+					<div class="contact-right">
+						<textarea placeholder="Message" required></textarea>
+					</div>
+					<div class="clearfix"></div>
+					<input type="submit" value="SUBMIT">
+				</form>
+			</div>
+		</div>
+	</div>
+<!-- //contact-page -->
+ <!-- footer -->
+ <div id="footer"></div>
+ <script>
+ $(function(){
+	 $("#footer").load('/footer');
+ });
+ </script>
+	 <!-- //footer -->
+	<!-- here stars scrolling icon -->
+	<script type="text/javascript">
+		$(document).ready(function () {
+			/*
+			var defaults = {
+					containerID: 'toTop', // fading element id
+				containerHoverID: 'toTopHover', // fading element hover id
+				scrollSpeed: 1200,
+				easingType: 'linear' 
+				};
+			*/
+
+			$().UItoTop({ easingType: 'easeOutQuart' });
+
+		});
+	</script>
+	<!-- //here ends scrolling icon -->
+	<script src="js/scripts.js"></script>
+</body>
+
+</html>
