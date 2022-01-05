@@ -3,7 +3,7 @@ import passport from "passport";
 import path from "path";
 import bodyParser from 'body-parser'
 import Authentication from './routes/auth';
-import Liquors from './routes/liquor';
+import Tracker from './routes/tracker';
 import pages from './routes/pages';
 const app = express()
 const port=process.env.PORT || 8000
@@ -18,13 +18,13 @@ app.use(express.static(path.join(__dirname, "../UI")));
 //app pages
 app.use("/", pages);
 app.get('/api/v1', (req, res) => {
-  return res.status(200).send({'message': 'Liquor API'});
+  return res.status(200).send({'message': 'Issue tracker API'});
 })
 // Users
 app.use('/api/v1/auth/',Authentication);
 
 // Kavata API
-app.use('/api/v1/kavata/',Liquors);
+app.use('/api/v1/tracker/',Tracker);
 app.listen(port,()=>{
   console.log(`app running on port ${port}`);
 });

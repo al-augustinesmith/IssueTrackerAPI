@@ -1,17 +1,15 @@
 import Joi from '@hapi/joi'
 import { serverResponse } from './Response';
 // schema
-const liquor = Joi.object().keys({
-    liquor_name: Joi.string().required(),
+const issue = Joi.object().keys({
+    issue_name: Joi.string().required(),
     about: Joi.string().required(),
-    price: Joi.number().required(),
     category: Joi.string().required(),
     image_url: Joi.string().required()
 });
 const lUpdate = Joi.object().keys({
-    liquor_name: Joi.string(),
+    issue_name: Joi.string(),
     about: Joi.string(),
-    price: Joi.number(),
     category: Joi.string(),
     image_url: Joi.string()
 });
@@ -75,8 +73,8 @@ const validSignin = (req, res, next) => {
         return next();
     });
 };
-const validLiquor = (req, res, next) => {
-    return Joi.validate(req.body, liquor, (err, value) => {
+const validIssue = (req, res, next) => {
+    return Joi.validate(req.body, issue, (err, value) => {
         if (err) {
             return error(err, res);
         }
@@ -92,4 +90,4 @@ const validUpdate = (req, res, next) => {
     });
 };
 
-export { validSignup, validSignin, validUpdate, validLiquor }
+export { validSignup, validSignin, validUpdate, validIssue }

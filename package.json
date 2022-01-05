@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nccharles/LiqourApi.git"
+    "url": "git+https://github.com/nccharles/IssueTrackerAPI.git"
   },
   "author": "Charles NDAYISABA",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nccharles/LiqourApi/issues"
+    "url": "https://github.com/nccharles/IssueTrackerAPI/issues"
   },
-  "homepage": "https://github.com/nccharles/LiqourApi#readme",
+  "homepage": "https://github.com/nccharles/IssueTrackerAPI#readme",
   "dependencies": {
     "@babel/runtime": "^7.16.5",
     "@hapi/joi": "^15.0.3",

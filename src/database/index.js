@@ -37,14 +37,14 @@ const userUpdate = async (table, values, userID) => {
   const { rows: Result } = await pool.query(queryString);
   return Result[0];
 };
-// add new liquor
+// add new issue
 const lCreate = async (res, table, columns, values, condition) => {
-  const liquor = `SELECT id FROM liquor ${condition};`;
-  if ((await pool.query(liquor)).rows[0]) {
+  const issue = `SELECT id FROM issue ${condition};`;
+  if ((await pool.query(issue)).rows[0]) {
     return serverResponse(
       res,
       404,
-      ...["status", 404, "error", `This liquor Alread Inserted!`]
+      ...["status", 404, "error", `This issue Alread Inserted!`]
     );
   }
 
@@ -58,7 +58,7 @@ const lCreate = async (res, table, columns, values, condition) => {
       "status",
       201,
       "message",
-      "Liquor Successfully posted",
+      "issue Successfully posted",
       "data",
       Result[0],
     ]
@@ -71,10 +71,10 @@ const querySignin = async (columns, condition) => {
   return rows;
 };
 
-// get liquor
+// get issue
 
-const findLiquor = async (columns, condition) => {
-  const query = `SELECT ${columns} FROM liquor AS l,users as u,beer AS b,category AS c ${condition};`;
+const findIssue = async (columns, condition) => {
+  const query = `SELECT ${columns} FROM issue AS l,users as u,beer AS b,category AS c ${condition};`;
   const { rows } = await pool.query(query);
   return rows;
 };
@@ -86,27 +86,27 @@ const findCurrentUser = async (id) => {
 };
 
 // delete location
-const deleteLiquor = async (res, userId, isAdmin, lId) => {
-  let queryString = `DELETE FROM liquor WHERE owner = ${userId} AND id =${lId};`;
-  let liquorOwner = `SELECT owner FROM liquor WHERE owner = ${userId} AND id =${lId} ;`;
-  const liquor = `SELECT id FROM liquor WHERE id =${lId} ;`;
-  if (!(await pool.query(liquor)).rows[0]) {
+const deleteIssue = async (res, userId, isAdmin, lId) => {
+  let queryString = `DELETE FROM issue WHERE owner = ${userId} AND id =${lId};`;
+  let issueOwner = `SELECT owner FROM issue WHERE owner = ${userId} AND id =${lId} ;`;
+  const issue = `SELECT id FROM issue WHERE id =${lId} ;`;
+  if (!(await pool.query(issue)).rows[0]) {
     return serverResponse(
       res,
       404,
-      ...["status", 404, "error", `This liquor not fund!`]
+      ...["status", 404, "error", `This issue not fund!`]
     );
   }
 
   if (isAdmin) {
-    liquorOwner = `SELECT owner FROM liquor WHERE id =${lId} ;`;
-    queryString = `DELETE FROM liquor WHERE id =${lId};`;
+    issueOwner = `SELECT owner FROM issue WHERE id =${lId} ;`;
+    queryString = `DELETE FROM issue WHERE id =${lId};`;
   }
-  if (!(await pool.query(liquorOwner)).rows[0])
+  if (!(await pool.query(issueOwner)).rows[0])
     return serverResponse(
       res,
       401,
-      ...["status", 401, "error", `Unauthorized: This liquor is not yours`]
+      ...["status", 401, "error", `Unauthorized: This issue is not yours`]
     );
 
   await pool.query(queryString);
@@ -117,28 +117,28 @@ const deleteLiquor = async (res, userId, isAdmin, lId) => {
   );
 };
 // Update location
-const updateLiquor = async (res, columns, userId, isAdmin, lId) => {
-  const liquor = `SELECT id FROM liquor WHERE id =${lId} ;`;
-  if (!(await pool.query(liquor)).rows[0]) {
+const updateIssue = async (res, columns, userId, isAdmin, lId) => {
+  const issue = `SELECT id FROM issue WHERE id =${lId} ;`;
+  if (!(await pool.query(issue)).rows[0]) {
     return serverResponse(
       res,
       404,
-      ...["status", 404, "error", `This liquor not fund!`]
+      ...["status", 404, "error", `This issue not fund!`]
     );
   }
 
-  const liquorOwner = `SELECT owner FROM liquor WHERE  id =${lId} ;`;
+  const issueOwner = `SELECT owner FROM issue WHERE  id =${lId} ;`;
   if (isAdmin !== 1) {
-    liquorOwner = `SELECT owner FROM liquor WHERE owner = ${userId} AND id =${lId} ;`;
+    issueOwner = `SELECT owner FROM issue WHERE owner = ${userId} AND id =${lId} ;`;
   }
-  if (!(await pool.query(liquorOwner)).rows[0])
+  if (!(await pool.query(issueOwner)).rows[0])
     return serverResponse(
       res,
       401,
-      ...["status", 401, "error", `Unauthorized: This liquor is not yours`]
+      ...["status", 401, "error", `Unauthorized: This issue is not yours`]
     );
 
-  const query = `UPDATE liquor SET ${columns} WHERE owner = ${userId} AND id =${lId} RETURNING *;`;
+  const query = `UPDATE issue SET ${columns} WHERE owner = ${userId} AND id =${lId} RETURNING *;`;
   const { rows } = await pool.query(query);
   return serverResponse(
     res,
@@ -152,16 +152,16 @@ const client_order = async (
   columns,
   userId,
   lId,
-  liquor_no,
+  issue_no,
   odate,
   ddate
 ) => {
-  const liquor = `SELECT id FROM liquor WHERE id =${lId} ;`;
-  if (!(await pool.query(liquor)).rows[0]) {
+  const issue = `SELECT id FROM issue WHERE id =${lId} ;`;
+  if (!(await pool.query(issue)).rows[0]) {
     return serverResponse(
       res,
       404,
-      ...["status", 404, "error", `This liquor not fund!`]
+      ...["status", 404, "error", `This issue not fund!`]
     );
   }
 
@@ -173,16 +173,9 @@ const client_order = async (
       ...["status", 404, "error", `User not fund`]
     );
 
-  const checOrder = `SELECT o.id FROM client_order as o, users as u,liquor as l WHERE o.o_owner=u.id AND o.liquor_ID=l.id AND u.id=${userId} AND l.id=${lId}`;
-  if ((await pool.query(checOrder)).rows[0])
-    return serverResponse(
-      res,
-      403,
-      ...["status", 403, "error", `Already ordered`]
-    );
-  const queryString = `INSERT INTO client_order(${columns}) VALUES (${userId},${lId},${liquor_no},'${odate}','${ddate}');`;
+  const queryString = `INSERT INTO client_order(${columns}) VALUES (${userId},${lId},${issue_no},'${odate}','${ddate}');`;
   await pool.query(queryString);
-  const getdata = `SELECT o.id,u.first_name,u.last_name,u.email,u.address,u.phonenumber,l.liquor_name,l.category,o.ordered_on,l.image_url FROM client_order as o, users as u,liquor as l WHERE o.o_owner=u.id AND o.liquor_ID=l.id AND u.id=${userId} AND l.id=${lId}`;
+  const getdata = `SELECT o.id,u.first_name,u.last_name,u.email,u.address,u.phonenumber,l.issue_name,l.category,o.ordered_on,l.image_url FROM client_order as o, users as u,issue as l WHERE o.o_owner=u.id AND o.issue_ID=l.id AND u.id=${userId} AND l.id=${lId}`;
   const { rows } = await pool.query(getdata);
   return serverResponse(
     res,
@@ -200,9 +193,9 @@ const confirm = async (res, id) => {
     ...["status", 200, "message", "Confirmed Successfully", "data", rows[0]]
   );
 };
-// get ordered liquors
+// get ordered issues
 const getOrdered = async (res, condition) => {
-  const getdata = `SELECT o.id,o.confirmed,u.first_name,u.last_name,u.email,u.address,u.phonenumber,l.liquor_name,l.category,o.ordered_on,o.derivered_on,l.image_url FROM client_order as o, users as u,liquor as l ${condition}`;
+  const getdata = `SELECT o.id,o.confirmed,u.first_name,u.last_name,u.email,u.address,u.phonenumber,l.issue_name,l.category,o.ordered_on,o.derivered_on,l.image_url FROM client_order as o, users as u,issue as l ${condition}`;
   const { rows } = await pool.query(getdata);
   return serverResponse(
     res,
@@ -215,13 +208,11 @@ export default {
   query,
   confirm,
   userUpdate,
-  findLiquor,
-  client_order,
+  findIssue,
   findCurrentUser,
-  getOrdered,
-  updateLiquor,
+  updateIssue,
   lCreate,
-  deleteLiquor,
+  deleteIssue,
   queryCreate,
   querySignin,
 };
