@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import User from '../controllers/users';
+import { validSignup, validSignin } from '../helpers/validations';
+import { checkToken } from '../helpers/auth';
+const router = Router();
+router.post('/signup',validSignup, User.signUp);
+router.post('/signin',validSignin, User.signIn);
+router.patch('/user',checkToken,User.UpdateUser);
+router.get('/user',checkToken,User.currentUser);
+export default router;

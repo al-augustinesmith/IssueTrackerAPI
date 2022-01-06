@@ -1,0 +1,55 @@
+{
+  "name": "issuetrackerapi",
+  "version": "1.0.3",
+  "description": "Find issue tracker online",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon --exec babel-node src/index.js",
+    "clean": "rm -rf build && mkdir build",
+    "build": "babel src --out-dir build",
+    "start": "npm run build && node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:db:migrate": "NODE_ENV=development node --require @babel/register src/migrations/index.js --exit",
+    "db:migrate": "node --require @babel/register src/migrations/index.js --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nccharles/IssueTrackerAPI.git"
+  },
+  "author": "Charles NDAYISABA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nccharles/IssueTrackerAPI/issues"
+  },
+  "homepage": "https://github.com/nccharles/IssueTrackerAPI#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.16.7",
+    "@hapi/joi": "15.0.3",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.1",
+    "cloudinary": "^1.28.0",
+    "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.2",
+    "express-fileupload": "^1.2.1",
+    "joi": "^17.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "node-pre-gyp": "^0.17.0",
+    "passport": "^0.5.2",
+    "path": "^0.12.7",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.7",
+    "@babel/core": "^7.16.7",
+    "@babel/node": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
+    "@babel/register": "^7.16.7",
+    "nodemon": "^2.0.15"
+  },
+  "engines": {
+    "node": "16.5.0"
+  }
+}
