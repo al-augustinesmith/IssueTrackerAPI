@@ -5,14 +5,14 @@ const Issues = {
     async addIssue(req, res) {
         try {
             const { id } = req.tokenData;
-            let image_url = req.files != (null || undefined) ? await imageUpload(req.files.image_url) : req.body.image_url
+            let screenshot = req.files != (null || undefined) ? await imageUpload(req.files.screenshot) : req.body.screenshot
             const {
-                issue_name,category, about
+                title, description
             } = req.body;
             const table = 'issue'
-            const columns = `owner, issue_name,category, about,image_url`;
-            const condition = `WHERE owner ='${id}' AND issue_name='${issue_name}' AND category='${category}' AND about='${about}'`;
-            const values = `'${id}','${issue_name}','${category}', '${about}', '${image_url}'`;
+            const columns = `reporter, title, description,screenshot`;
+            const condition = `WHERE reporter ='${id}' AND title='${title}' AND description='${description}'`;
+            const values = `'${id}','${title}', '${description}', '${screenshot}'`;
             db.lCreate(res, table, columns, values, condition)
                 .then(response => {
                     return response
@@ -25,26 +25,23 @@ const Issues = {
     },
     async updateIssue(req, res) {
         try {
-            let image_url = req.files != (null || undefined) ? await imageUpload(req.files.image_url) : req.body.image_url,
+            let screenshot = req.files != (null || undefined) ? await imageUpload(req.files.screenshot) : req.body.screenshot,
                 columns = null,
-                l_name = null,
-                l_price = null,
-                l_category = null,
-                l_about = null,
-                l_image_url = null;
+                i_name = null,
+                i_description = null,
+                i_screenshot = null;
             const { id, isadmin } = req.tokenData;
             const { issueID } = req.params;
             const {
-                issue_name, price, category, about
+                title, description
             } = req.body;
             if (process.env.NODE_ENV === 'test') {
-                columns = `issue_name='${issue_name}', category='${category}', address='${address}', about= ${about}, image_url='${image_url}'`;
+                columns = `title='${title}', address='${address}', description= ${description}, screenshot='${screenshot}'`;
             } else {
-                l_name = issue_name ? `issue_name='${issue_name}',` : "";
-                l_category = category ? `category='${category}',` : "";
-                l_about = about ? `about='${about}',` : "";
-                l_image_url = image_url ? `image_url='${image_url}'` : "";
-                columns = `${l_name} ${l_category} ${l_about} ${l_image_url}`;
+                i_name = title ? `title='${title}',` : "";
+                i_description = description ? `description='${description}',` : "";
+                i_screenshot = screenshot ? `screenshot='${screenshot}'` : "";
+                columns = `${i_name} ${i_description} ${i_screenshot}`;
             }
             db.updateIssue(res, columns, id, isadmin, issueID)
                 .then(response => {
