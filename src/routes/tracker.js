@@ -1,15 +1,18 @@
-import { Router } from 'express';
-import fileUpload from 'express-fileupload';
-import {validUpdate,validIssue } from '../helpers/validations';
-import Issues from '../controllers/issues';
-import { checkToken } from '../helpers/auth';
+import { Router } from "express";
+import fileUpload from "express-fileupload";
+import { validUpdate, validIssue, validProject } from "../helpers/validations";
+import Track from "../controllers/track";
+import { checkToken } from "../helpers/auth";
 const router = Router();
-router.use(fileUpload({
+router.use(
+  fileUpload({
     useTempFiles: true,
-  }));
-router.post('/',checkToken, validIssue, Issues.addIssue);
-router.patch('/:issueID', checkToken, validUpdate, Issues.updateIssue);
-router.delete('/:issueID', checkToken, Issues.deleteIssue);
+  })
+);
+router.post("/project", checkToken, validProject, Track.addProject);
+router.post("/issue", checkToken, validIssue, Track.addIssue);
+router.patch("/:issueID", checkToken, validUpdate, Track.updateIssue);
+router.delete("/:issueID", checkToken, Track.deleteIssue);
 // router.get('/',Issues.getAllIssues);
 
 export default router;

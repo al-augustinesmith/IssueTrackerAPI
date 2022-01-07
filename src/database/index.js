@@ -44,7 +44,7 @@ const iCreate = async (res, table, columns, values, condition) => {
     return serverResponse(
       res,
       404,
-      ...["status", 404, "error", `This issue Alread Inserted!`]
+      ...["status", 404, "error", `Data Alread Inserted!`]
     );
   }
 
@@ -54,7 +54,7 @@ const iCreate = async (res, table, columns, values, condition) => {
   return serverResponse(
     res,
     201,
-    ...["status", 201, "message", "issue Successfully posted", "data", rows[0]]
+    ...["status", 201, "message", "Successfully added", "data", rows[0]]
   );
 };
 // Singin
