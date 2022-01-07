@@ -1,13 +1,17 @@
 import Joi from "@hapi/joi";
 import { serverResponse } from "./Response";
 // schema
+const project = Joi.object().keys({
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+});
 const issue = Joi.object().keys({
   title: Joi.string().required(),
   description: Joi.string().required(),
   project: Joi.number().required(),
   screenshot: Joi.string(),
 });
-const lUpdate = Joi.object().keys({
+const iUpdate = Joi.object().keys({
   title: Joi.string(),
   description: Joi.string(),
   screenshot: Joi.string(),
@@ -99,6 +103,14 @@ const validSignin = (req, res, next) => {
     return next();
   });
 };
+const validProject = (req, res, next) => {
+  return Joi.validate(req.body, project, (err, value) => {
+    if (err) {
+      return error(err, res);
+    }
+    return next();
+  });
+};
 const validIssue = (req, res, next) => {
   return Joi.validate(req.body, issue, (err, value) => {
     if (err) {
@@ -108,7 +120,7 @@ const validIssue = (req, res, next) => {
   });
 };
 const validUpdate = (req, res, next) => {
-  return Joi.validate(req.body, lUpdate, (err, value) => {
+  return Joi.validate(req.body, iUpdate, (err, value) => {
     if (err) {
       return error(err, res);
     }
@@ -116,4 +128,4 @@ const validUpdate = (req, res, next) => {
   });
 };
 
-export { validSignup, validSignin, validUpdate, validIssue };
+export { validSignup, validSignin, validUpdate, validProject, validIssue };

@@ -1,7 +1,26 @@
 import { serverResponse, serverError } from "../helpers/Response";
 import imageUpload from "../middleware/cloudinary";
 import db from "../database";
-const Issues = {
+const Track = {
+  async addProject(req, res) {
+    try {
+      const { id } = req.tokenData;
+      const { title, description } = req.body;
+      const table = "projects";
+      const columns = `owner, title, description,people`;
+      const condition = `WHERE owner ='${id}' AND title='${title}' AND description='${description}'`;
+      const values = `'${id}','${title}', '${description}',ARRAY[${id}]`;
+      db.iCreate(res, table, columns, values, condition)
+        .then((response) => {
+          return response;
+        })
+        .catch((err) => {
+          return serverError(res, err);
+        });
+    } catch (err) {
+      return serverError(res, err);
+    }
+  },
   async addIssue(req, res) {
     try {
       const { id } = req.tokenData;
@@ -75,4 +94,4 @@ const Issues = {
   },
 };
 
-export default Issues;
+export default Track;
