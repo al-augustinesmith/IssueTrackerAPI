@@ -65,7 +65,6 @@ const querySignin = async (columns, condition) => {
 };
 
 // get issue
-
 const findIssue = async (columns, condition) => {
   const query = `SELECT ${columns} FROM issue AS I,users as u ${condition};`;
   const { rows } = await pool.query(query);
@@ -78,7 +77,7 @@ const findCurrentUser = async (id) => {
   return rows;
 };
 
-// delete location
+// delete an Issue
 const deleteIssue = async (res, userId, isAdmin, IId) => {
   let queryString = `DELETE FROM issues WHERE reporter = ${userId} AND id =${IId};`;
   let issueReporter = `SELECT reporter FROM issue WHERE reporter = ${userId} AND id =${IId} ;`;
@@ -109,9 +108,9 @@ const deleteIssue = async (res, userId, isAdmin, IId) => {
     ...["status", 200, "message", "Deleted Successfully!"]
   );
 };
-// Update location
+// Update an Issue
 const updateIssue = async (res, columns, userId, isAdmin, IId) => {
-  const issue = `SELECT id FROM issue WHERE id =${IId} ;`;
+  const issue = `SELECT id FROM issues WHERE id =${IId} ;`;
   if (!(await pool.query(issue)).rows[0]) {
     return serverResponse(
       res,
@@ -120,9 +119,9 @@ const updateIssue = async (res, columns, userId, isAdmin, IId) => {
     );
   }
 
-  const issueReporter = `SELECT owner FROM issue WHERE  id =${IId} ;`;
+  const issueReporter = `SELECT reporter FROM issues WHERE  id =${IId} ;`;
   if (isAdmin !== 1) {
-    issueReporter = `SELECT owner FROM issue WHERE owner = ${userId} AND id =${IId} ;`;
+    issueReporter = `SELECT reporter FROM issues WHERE reporter = ${userId} AND id =${IId} ;`;
   }
   if (!(await pool.query(issueReporter)).rows[0])
     return serverResponse(
@@ -131,7 +130,7 @@ const updateIssue = async (res, columns, userId, isAdmin, IId) => {
       ...["status", 401, "error", `Unauthorized: This issue is not yours`]
     );
 
-  const query = `UPDATE issue SET ${columns} WHERE owner = ${userId} AND id =${IId} RETURNING *;`;
+  const query = `UPDATE issues SET ${columns} WHERE reporter = ${userId} AND id =${IId} RETURNING *;`;
   const { rows } = await pool.query(query);
   return serverResponse(
     res,
@@ -140,25 +139,6 @@ const updateIssue = async (res, columns, userId, isAdmin, IId) => {
   );
 };
 
-
-  const checkUser = `SELECT id FROM users WHERE id = ${userId};`;
-  if (!(await pool.query(checkUser)).rows[0])
-    return serverResponse(
-      res,
-      404,
-      ...["status", 404, "error", `User not fund`]
-    );
-
-  const queryString = `INSERT INTO client_order(${columns}) VALUES (${userId},${IId},${issue_no},'${odate}','${ddate}');`;
-  await pool.query(queryString);
-  const getdata = `SELECT o.id,u.first_name,u.last_name,u.email,u.address,u.phonenumber,l.issue_name,l.category,o.ordered_on,l.image_url FROM client_order as o, users as u,issue as l WHERE o.o_owner=u.id AND o.issue_ID=l.id AND u.id=${userId} AND l.id=${IId}`;
-  const { rows } = await pool.query(getdata);
-  return serverResponse(
-    res,
-    200,
-    ...["status", 200, "message", "Ok", "data", rows[0]]
-  );
-};
 
 export default {
   query,

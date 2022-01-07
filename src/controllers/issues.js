@@ -30,7 +30,7 @@ const Issues = {
       let screenshot =
           req.files != (null || undefined)
             ? await imageUpload(req.files.screenshot)
-            : req.body.screenshot,
+            : req.body.screenshot || "",
         columns = null,
         i_name = null,
         i_description = null,
@@ -39,11 +39,11 @@ const Issues = {
       const { issueID } = req.params;
       const { title, description } = req.body;
       if (process.env.NODE_ENV === "test") {
-        columns = `title='${title}', address='${address}', description= ${description}, screenshot='${screenshot}'`;
+        columns = `title='${title}', description= ${description}, screenshot='${screenshot}'`;
       } else {
         i_name = title ? `title='${title}',` : "";
         i_description = description ? `description='${description}',` : "";
-        i_screenshot = screenshot ? `screenshot='${screenshot}'` : "";
+        i_screenshot = `screenshot='${screenshot}'`;
         columns = `${i_name} ${i_description} ${i_screenshot}`;
       }
       db.updateIssue(res, columns, id, isadmin, issueID)
