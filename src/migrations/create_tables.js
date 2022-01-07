@@ -45,14 +45,15 @@ const projectsTable = `CREATE TABLE IF NOT EXISTS projects(
     id SERIAL PRIMARY KEY NOT NULL,
     title VARCHAR(80) NOT NULL,
     description VARCHAR(80) NOT NULL,
-    owner INTEGER DEFAULT 1,
+    owner INTEGER REFERENCES users(id) NOT NULL,
     people INTEGER ARRAY
   );`;
 const issuesTable = `CREATE TABLE IF NOT EXISTS issues(
     id SERIAL PRIMARY KEY NOT NULL,
     title VARCHAR(80) NOT NULL,
     description VARCHAR(80) NOT NULL,
-    reporter INTEGER DEFAULT 1,
+    reporter INTEGER REFERENCES users(id) NOT NULL,
+    project INTEGER REFERENCES projects(id) NOT NULL,
     screenshot VARCHAR(500) NOT NULL
   );`;
 const createAllTables = async () => {

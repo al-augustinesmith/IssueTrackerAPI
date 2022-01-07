@@ -4,6 +4,7 @@ import { serverResponse } from "./Response";
 const issue = Joi.object().keys({
   title: Joi.string().required(),
   description: Joi.string().required(),
+  project: Joi.number().required(),
   screenshot: Joi.string(),
 });
 const lUpdate = Joi.object().keys({
