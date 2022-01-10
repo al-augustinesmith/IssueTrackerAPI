@@ -3,6 +3,7 @@ import {
   comparePassword,
   hashedPassword,
 } from "../helpers/auth";
+import { sendEmail } from "../helpers/email";
 import db from "../database";
 import { serverError, serverResponse, userResponse } from "../helpers/Response";
 export default class User {
@@ -70,6 +71,7 @@ export default class User {
       db.queryCreate(table, columns, values)
         .then((invitedUser) => {
           const { id, email, project } = invitedUser;
+          sendEmail(email, invite_key).catch(console.error);
           return userResponse(
             res,
             201,
