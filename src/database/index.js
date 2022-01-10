@@ -66,7 +66,7 @@ const querySignin = async (columns, condition) => {
 
 // get issue
 const findIssue = async (columns, condition) => {
-  const query = `SELECT ${columns} FROM issue AS I,users as u ${condition};`;
+  const query = `SELECT ${columns} FROM issues AS I,users as u,projects as p ${condition};`;
   const { rows } = await pool.query(query);
   return rows;
 };
@@ -138,7 +138,6 @@ const updateIssue = async (res, columns, userId, isAdmin, IId) => {
     ...["status", 200, "message", "Updated Successfully", "data", rows[0]]
   );
 };
-
 
 export default {
   query,
