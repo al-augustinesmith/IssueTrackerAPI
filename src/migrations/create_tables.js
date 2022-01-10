@@ -7,10 +7,12 @@ const pool = new Pool({
 const dropping = async () => {
   const userMigration = `DROP TABLE IF EXISTS users CASCADE`;
   const projectMigration = `DROP TABLE IF EXISTS projects CASCADE`;
+  const uProMigration = `DROP TABLE IF EXISTS userProjects CASCADE`;
   const issueMigration = `DROP TABLE IF EXISTS issues CASCADE`;
   try {
     await pool.query(userMigration);
     await pool.query(projectMigration);
+    await pool.query(uProMigration);
     await pool.query(issueMigration);
     console.log("Tables dropped");
   } catch (err) {
@@ -48,22 +50,30 @@ const projectsTable = `CREATE TABLE IF NOT EXISTS projects(
     owner INTEGER REFERENCES users(id) NOT NULL,
     people INTEGER ARRAY
   );`;
+const uProTable = `CREATE TABLE IF NOT EXISTS userProjects(
+    id SERIAL PRIMARY KEY NOT NULL,
+    project INTEGER REFERENCES projects(id) NOT NULL,
+    invite_key text NOT NULL,
+    email VARCHAR(200) NOT NULL,
+    joined BOOLEAN DEFAULT false
+  );`;
 const issuesTable = `CREATE TABLE IF NOT EXISTS issues(
     id SERIAL PRIMARY KEY NOT NULL,
     title VARCHAR(80) NOT NULL,
     description VARCHAR(80) NOT NULL,
     reporter INTEGER REFERENCES users(id) NOT NULL,
     project INTEGER REFERENCES projects(id) NOT NULL,
-    screenshot VARCHAR(500) NOT NULL
+    screenshot text NOT NULL
   );`;
 const createAllTables = async () => {
   try {
     await pool.query(usersTable);
     await pool.query(projectsTable);
+    await pool.query(uProTable);
     await pool.query(issuesTable);
     console.log("created");
   } catch (err) {
-    console.log(`creation failed`);
+    console.log(`creation ${err.message}`);
   }
 };
 
