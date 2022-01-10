@@ -92,6 +92,36 @@ const Track = {
       return serverError(res);
     }
   },
+  getAllIssues(req, res) {
+    try {
+      const columns = `I.id,I.title,I.description, I.screenshot,p.title as project_name, u.email AS reporter_email`;
+      let condition = `WHERE u.id=I.reporter and I.project=p.id`;
+      if (req.tokenData) {
+        const { id } = req.tokenData;
+        condition = `WHERE u.id=I.reporter and I.project=p.id AND u.id = '${id}'`;
+      }
+      db.findIssue(columns, condition)
+        .then((response) => {
+          if (!response.length)
+            return serverResponse(
+              res,
+              404,
+              ...["status", 404, "message", `Data not fund.`]
+            );
+
+          return serverResponse(
+            res,
+            200,
+            ...["status", 200, "message", "Ok", "data", response]
+          );
+        })
+        .catch((err) => {
+          return serverError(res);
+        });
+    } catch (err) {
+      return serverError(res);
+    }
+  },
 };
 
 export default Track;

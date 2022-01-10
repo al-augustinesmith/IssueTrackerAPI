@@ -13,6 +13,6 @@ router.post("/project", checkToken, validProject, Track.addProject);
 router.post("/issue", checkToken, validIssue, Track.addIssue);
 router.patch("/:issueID", checkToken, validUpdate, Track.updateIssue);
 router.delete("/:issueID", checkToken, Track.deleteIssue);
-// router.get('/',Issues.getAllIssues);
+router.get('/issues',Track.getAllIssues);
 
 export default router;
