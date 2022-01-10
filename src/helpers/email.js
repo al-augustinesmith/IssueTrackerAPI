@@ -21,7 +21,7 @@ const sendEmail = async (email, key) => {
   let info = await transporter.sendMail({
     from: '"Issue Tracker 👻" <me@nccharles.site>', // sender address
     to: email, // list of receivers
-    subject: "You're invited to joi the Project ✔", // Subject line
+    subject: "You're invited to join the Project ✔", // Subject line
     html: `<b>Your team is waiting for you to join the Project</b><br/> Here is the link to <a href="https://issuertracker.com/invite/${key}">Join the project</a>`, // html body
   });
 
