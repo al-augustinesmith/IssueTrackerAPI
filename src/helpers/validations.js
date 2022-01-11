@@ -31,7 +31,6 @@ const signup = Joi.object().keys({
     .regex(/[0-9]{10}$/)
     .required(),
   address: Joi.string().required(),
-  isAdmin: Joi.number().required(),
 });
 const invite = Joi.object().keys({
   url: Joi.string().uri().label("Source of invite(Website URL)").required(),

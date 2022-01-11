@@ -20,8 +20,9 @@ const dropping = async () => {
   }
 };
 const insertData = async () => {
+  // default admin pass is: admin12
   const adminInsert = `INSERT INTO users(first_name,last_name,email,address,password,phoneNumber,isAdmin) 
-  VALUES('Charles','NDAYISABA','charles@tracker.rw','Kigali','$2a$08$jXozHrKh0B.DZJ9jvGO3IeMRwk9gT.5T2kfOEs0MGI6t4WrE3lDS6','0785856892','1')`;
+  VALUES('Charles','NDAYISABA','admin@tracker.rw','Kigali','$2a$08$Pc0B3oN5Q8uM.jGrAvQdIuDlP58avOycdzVdNEYREc5CiQChc9fjG','0785856892',true)`;
   const projectInsert = `INSERT INTO projects(title,description,owner,people) 
   VALUES('Poker','Poker Game','1','{1,2,3}')`;
 
@@ -41,7 +42,7 @@ const usersTable = `CREATE TABLE IF NOT EXISTS users(
     address VARCHAR(30) NOT NULL,
     password VARCHAR(255) NOT NULL,
     phoneNumber VARCHAR(10) NOT NULL,
-    isAdmin INTEGER DEFAULT 3
+    isAdmin BOOLEAN DEFAULT false
   );`;
 const projectsTable = `CREATE TABLE IF NOT EXISTS projects(
     id SERIAL PRIMARY KEY NOT NULL,

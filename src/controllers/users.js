@@ -11,20 +11,13 @@ import { serverError, serverResponse, userResponse } from "../helpers/Response";
 export default class User {
   static signUp(req, res) {
     try {
-      let {
-        first_name,
-        last_name,
-        address,
-        password,
-        phoneNumber,
-        isAdmin,
-      } = req.body;
+      let { first_name, last_name, address, password, phoneNumber } = req.body;
       const { key } = req.params;
-      let { email } = verifyKey(key);
+      let { email, project } = verifyKey(key);
       password = hashedPassword(password);
       const table = "users";
-      const columns = `first_name, last_name, email, password, phonenumber,address,isadmin`;
-      const values = `'${first_name}', '${last_name}', '${email}', '${password}', '${phoneNumber}', '${address}','${isAdmin}'`;
+      const columns = `first_name, last_name, email, password, phonenumber,address`;
+      const values = `'${first_name}', '${last_name}', '${email}', '${password}', '${phoneNumber}', '${address}'`;
       db.queryCreate(table, columns, values)
         .then((userRes) => {
           const { id, first_name, last_name, email, isadmin } = userRes;
@@ -92,7 +85,7 @@ export default class User {
               "message",
               "User Invited Successfully",
               "data",
-              email,
+              invitedUser,
             ]
           );
         })
