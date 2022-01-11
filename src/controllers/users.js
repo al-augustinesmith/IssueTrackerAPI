@@ -71,33 +71,18 @@ export default class User {
       const table = "userProjects";
       const columns = `project,invite_key,email,joined`;
       const values = `'${project}', '${invite_key}', '${email}',false`;
-      db.queryCreate(table, columns, values)
-        .then((invitedUser) => {
+      const condition = `WHERE email='${email}' AND project='${project}'`;
+      db.dataCreate(res, table, columns, values, condition)
+        .then((response) => {
           sendEmail({ first_name, last_name }, email, invite_key, url).catch(
             console.error
           );
-          return userResponse(
-            res,
-            201,
-            ...[
-              "status",
-              201,
-              "message",
-              "User Invited Successfully",
-              "data",
-              invitedUser,
-            ]
-          );
+          return response;
         })
         .catch((err) => {
-          return serverResponse(
-            res,
-            403,
-            ...["status", 403, "error", `This User already invited.`]
-          );
+          return serverError(res);
         });
     } catch (err) {
-      console.log(err);
       return serverError(res);
     }
   }

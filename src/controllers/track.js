@@ -33,7 +33,7 @@ const Track = {
       const columns = `reporter, title, description,project,screenshot`;
       const condition = `WHERE reporter ='${id}' AND project='${project}' AND title='${title}' AND description='${description}'`;
       const values = `'${id}','${title}', '${description}','${project}', '${screenshot}'`;
-      db.iCreate(res, table, columns, values, condition)
+      db.dataCreate(res, table, columns, values, condition)
         .then((response) => {
           return response;
         })
