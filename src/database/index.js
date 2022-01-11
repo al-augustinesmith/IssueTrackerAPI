@@ -31,20 +31,21 @@ const queryCreate = async (table, columns, values) => {
   const { rows: Result } = await pool.query(queryString);
   return Result[0];
 };
+
 // update User
 const userUpdate = async (table, values, userID) => {
   const queryString = `UPDATE ${table} SET ${values} WHERE id=${userID} RETURNING *;`;
   const { rows: Result } = await pool.query(queryString);
   return Result[0];
 };
-// add new issue
-const iCreate = async (res, table, columns, values, condition) => {
+// add new data
+const dataCreate = async (res, table, columns, values, condition) => {
   const issue = `SELECT id FROM ${table} ${condition};`;
   if ((await pool.query(issue)).rows[0]) {
     return serverResponse(
       res,
       404,
-      ...["status", 404, "error", `Data Alread Inserted!`]
+      ...["status", 404, "error", `Data Already Inserted!`]
     );
   }
 
@@ -145,7 +146,7 @@ export default {
   findIssue,
   findCurrentUser,
   updateIssue,
-  iCreate,
+  dataCreate,
   deleteIssue,
   queryCreate,
   querySignin,

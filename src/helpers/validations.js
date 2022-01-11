@@ -27,15 +27,18 @@ const signup = Joi.object().keys({
   first_name: Joi.string().min(3).max(45).required(),
   last_name: Joi.string().min(3).max(45).required(),
   password: Joi.string().min(6).max(50).required(),
-  email: Joi.string()
-    .email()
-    .regex(/^\S+@\S+\.\S+$/)
-    .required(),
   phoneNumber: Joi.string()
     .regex(/[0-9]{10}$/)
     .required(),
   address: Joi.string().required(),
-  isAdmin: Joi.number().required(),
+});
+const invite = Joi.object().keys({
+  url: Joi.string().uri().label("Source of invite(Website URL)").required(),
+  project: Joi.number().required(),
+  email: Joi.string()
+    .email()
+    .regex(/^\S+@\S+\.\S+$/)
+    .required(),
 });
 // error message function
 const error = (err, res) => {
@@ -44,11 +47,9 @@ const error = (err, res) => {
 };
 // validations
 const validSignup = (req, res, next) => {
-  const { first_name, last_name, address, phoneNumber, password } = req.body;
-  let { email } = req.body;
-  email = email.toLowerCase().trim();
-  req.body.email = email;
-  if (!email || !first_name || !last_name || !address || !phoneNumber) {
+  let { first_name, last_name, address, phoneNumber, password } = req.body;
+  let { key } = req.params;
+  if (!key || !first_name || !last_name || !address || !phoneNumber) {
     return serverResponse(
       res,
       422,
@@ -119,6 +120,14 @@ const validIssue = (req, res, next) => {
     return next();
   });
 };
+const validInvite = (req, res, next) => {
+  return Joi.validate(req.body, invite, (err, value) => {
+    if (err) {
+      return error(err, res);
+    }
+    return next();
+  });
+};
 const validUpdate = (req, res, next) => {
   return Joi.validate(req.body, iUpdate, (err, value) => {
     if (err) {
@@ -128,4 +137,11 @@ const validUpdate = (req, res, next) => {
   });
 };
 
-export { validSignup, validSignin, validUpdate, validProject, validIssue };
+export {
+  validSignup,
+  validSignin,
+  validUpdate,
+  validProject,
+  validInvite,
+  validIssue,
+};

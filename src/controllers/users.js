@@ -1,5 +1,7 @@
 import {
   generateToken,
+  generateKey,
+  verifyKey,
   comparePassword,
   hashedPassword,
 } from "../helpers/auth";
@@ -9,23 +11,23 @@ import { serverError, serverResponse, userResponse } from "../helpers/Response";
 export default class User {
   static signUp(req, res) {
     try {
-      let {
-        email,
-        first_name,
-        last_name,
-        address,
-        password,
-        phoneNumber,
-        isAdmin,
-      } = req.body;
+      let { first_name, last_name, address, password, phoneNumber } = req.body;
+      const { key } = req.params;
+      let { email, project } = verifyKey(key);
       password = hashedPassword(password);
       const table = "users";
-      const columns = `first_name, last_name, email, password, phonenumber,address,isadmin`;
-      const values = `'${first_name}', '${last_name}', '${email}', '${password}', '${phoneNumber}', '${address}','${isAdmin}'`;
+      const columns = `first_name, last_name, email, password, phonenumber,address`;
+      const values = `'${first_name}', '${last_name}', '${email}', '${password}', '${phoneNumber}', '${address}'`;
       db.queryCreate(table, columns, values)
         .then((userRes) => {
-          const { id, email, isadmin } = userRes;
-          const token = generateToken({ id, email, isadmin });
+          const { id, first_name, last_name, email, isadmin } = userRes;
+          const token = generateToken({
+            id,
+            email,
+            first_name,
+            last_name,
+            isadmin,
+          });
 
           const SignedUp = {
             id,
@@ -63,34 +65,22 @@ export default class User {
   }
   static InviteUser(req, res) {
     try {
-      let { email, project } = req.body;
-      const invite_key = generateToken({ email, project });
+      const { email, project, url } = req.body;
+      const { first_name, last_name } = req.tokenData;
+      const invite_key = generateKey({ email, project });
       const table = "userProjects";
       const columns = `project,invite_key,email,joined`;
       const values = `'${project}', '${invite_key}', '${email}',false`;
-      db.queryCreate(table, columns, values)
-        .then((invitedUser) => {
-          const { id, email, project } = invitedUser;
-          sendEmail(email, invite_key).catch(console.error);
-          return userResponse(
-            res,
-            201,
-            ...[
-              "status",
-              201,
-              "message",
-              "User Invited Successfully",
-              "data",
-              email,
-            ]
+      const condition = `WHERE email='${email}' AND project='${project}'`;
+      db.dataCreate(res, table, columns, values, condition)
+        .then((response) => {
+          sendEmail({ first_name, last_name }, email, invite_key, url).catch(
+            console.error
           );
+          return response;
         })
         .catch((err) => {
-          return serverResponse(
-            res,
-            403,
-            ...["status", 403, "error", `This User already invited.`]
-          );
+          return serverError(res);
         });
     } catch (err) {
       return serverError(res);
@@ -154,7 +144,13 @@ export default class User {
             ...["status", 422, "error", "Incorrect Password"]
           );
         }
-        const token = generateToken({ id, email, isadmin });
+        const token = generateToken({
+          id,
+          first_name,
+          last_name,
+          email,
+          isadmin,
+        });
 
         const loggedIn = {
           id,

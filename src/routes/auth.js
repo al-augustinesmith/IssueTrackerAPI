@@ -1,10 +1,10 @@
 import { Router } from "express";
 import User from "../controllers/users";
-import { validSignup, validSignin } from "../helpers/validations";
+import { validSignup, validSignin ,validInvite} from "../helpers/validations";
 import { checkToken } from "../helpers/auth";
 const router = Router();
-router.post("/signup", validSignup, User.signUp);
-router.post("/invite", User.InviteUser);
+router.post("/signup/:key", validSignup, User.signUp);
+router.post("/invite", checkToken, validInvite, User.InviteUser);
 router.post("/signin", validSignin, User.signIn);
 router.patch("/user", checkToken, User.UpdateUser);
 router.get("/user", checkToken, User.currentUser);
