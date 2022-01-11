@@ -1,5 +1,7 @@
 import {
   generateToken,
+  generateKey,
+  verifyKey,
   comparePassword,
   hashedPassword,
 } from "../helpers/auth";
@@ -10,7 +12,6 @@ export default class User {
   static signUp(req, res) {
     try {
       let {
-        email,
         first_name,
         last_name,
         address,
@@ -18,14 +19,22 @@ export default class User {
         phoneNumber,
         isAdmin,
       } = req.body;
+      const { key } = req.params;
+      let { email } = verifyKey(key);
       password = hashedPassword(password);
       const table = "users";
       const columns = `first_name, last_name, email, password, phonenumber,address,isadmin`;
       const values = `'${first_name}', '${last_name}', '${email}', '${password}', '${phoneNumber}', '${address}','${isAdmin}'`;
       db.queryCreate(table, columns, values)
         .then((userRes) => {
-          const { id, email, isadmin } = userRes;
-          const token = generateToken({ id, email, isadmin });
+          const { id, first_name, last_name, email, isadmin } = userRes;
+          const token = generateToken({
+            id,
+            email,
+            first_name,
+            last_name,
+            isadmin,
+          });
 
           const SignedUp = {
             id,
@@ -63,15 +72,17 @@ export default class User {
   }
   static InviteUser(req, res) {
     try {
-      let { email, project } = req.body;
-      const invite_key = generateToken({ email, project });
+      const { email, project, url } = req.body;
+      const { first_name, last_name } = req.tokenData;
+      const invite_key = generateKey({ email, project });
       const table = "userProjects";
       const columns = `project,invite_key,email,joined`;
       const values = `'${project}', '${invite_key}', '${email}',false`;
       db.queryCreate(table, columns, values)
         .then((invitedUser) => {
-          const { id, email, project } = invitedUser;
-          sendEmail(email, invite_key).catch(console.error);
+          sendEmail({ first_name, last_name }, email, invite_key, url).catch(
+            console.error
+          );
           return userResponse(
             res,
             201,
@@ -93,6 +104,7 @@ export default class User {
           );
         });
     } catch (err) {
+      console.log(err);
       return serverError(res);
     }
   }
@@ -154,7 +166,13 @@ export default class User {
             ...["status", 422, "error", "Incorrect Password"]
           );
         }
-        const token = generateToken({ id, email, isadmin });
+        const token = generateToken({
+          id,
+          first_name,
+          last_name,
+          email,
+          isadmin,
+        });
 
         const loggedIn = {
           id,
