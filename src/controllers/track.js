@@ -76,7 +76,6 @@ const Track = {
       return serverError(res);
     }
   },
-
   deleteIssue(req, res) {
     try {
       const { id, isadmin } = req.tokenData;
