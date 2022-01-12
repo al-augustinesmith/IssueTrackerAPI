@@ -4,7 +4,6 @@ import path from "path";
 import bodyParser from 'body-parser'
 import Authentication from './routes/auth';
 import Tracker from './routes/tracker';
-import pages from './routes/pages';
 const app = express()
 const port=process.env.PORT || 8000
 //passport configuration

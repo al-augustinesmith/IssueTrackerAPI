@@ -10,7 +10,7 @@ const Track = {
       const columns = `owner, title, description,people`;
       const condition = `WHERE owner ='${id}' AND title='${title}' AND description='${description}'`;
       const values = `'${id}','${title}', '${description}',ARRAY[${id}]`;
-      db.iCreate(res, table, columns, values, condition)
+      db.dataCreate(res, table, columns, values, condition)
         .then((response) => {
           return response;
         })
