@@ -15,7 +15,7 @@ const sendIssueToJira = async (title, description) => {
       },
       summary: title,
       issuetype: {
-        name: "Task",
+        name: "Bug",
       },
       description: {
         type: "doc",
