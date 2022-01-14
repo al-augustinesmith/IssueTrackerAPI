@@ -127,7 +127,7 @@ export default class User {
     const values = `WHERE email='${email}'`;
     db.querySignin(columns, values)
       .then((response) => {
-        if (!response.length) {
+        if (!response) {
           return serverResponse(
             res,
             404,
@@ -135,7 +135,7 @@ export default class User {
           );
         }
 
-        const [{ id, first_name, last_name, password, isadmin }] = response;
+        const { id, first_name, last_name, password, isadmin } = response;
         const decryptedPassword = comparePassword(password, checkPassword);
         if (!decryptedPassword) {
           return serverResponse(
@@ -168,6 +168,7 @@ export default class User {
         );
       })
       .catch((err) => {
+        console.log(err)
         return serverError(res);
       });
   }
