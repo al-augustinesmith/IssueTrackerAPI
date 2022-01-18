@@ -28,8 +28,12 @@ const Track = {
       const columns = `p.id,p.owner, p.title, p.description,p.people`;
       let condition = `WHERE u.id=p.owner`;
       if (req.tokenData) {
-        const { id } = req.tokenData;
-        condition = `WHERE u.id=p.owner AND u.id = '${id}'`;
+        const { id, isadmin } = req.tokenData;
+        if (isadmin === 1) {
+          condition = `WHERE u.id=p.owner`;
+        } else {
+          condition = `WHERE u.id=p.owner AND u.id = '${id}'`;
+        }
       }
       db.findProject(columns, condition)
         .then((response) => {
