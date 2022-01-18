@@ -23,6 +23,37 @@ const Track = {
       return serverError(res, err);
     }
   },
+  getAllProjects(req, res) {
+    try {
+      const columns = `p.id,p.owner, p.title, p.description,p.people`;
+      let condition = `WHERE u.id=p.owner`;
+      if (req.tokenData) {
+        const { id } = req.tokenData;
+        condition = `WHERE u.id=p.owner AND u.id = '${id}'`;
+      }
+      db.findProject(columns, condition)
+        .then((response) => {
+          if (!response.length)
+            return serverResponse(
+              res,
+              404,
+              ...["status", 404, "message", `Data not fund.`]
+            );
+
+          return serverResponse(
+            res,
+            200,
+            ...["status", 200, "message", "Ok", "data", response]
+          );
+        })
+        .catch((err) => {
+          return serverError(res);
+        });
+    } catch (err) {
+      return serverError(res);
+    }
+  },
+
   async addIssue(req, res) {
     try {
       const { id } = req.tokenData;
