@@ -15,6 +15,6 @@ router.post("/issue", checkToken, validIssue, Track.addIssue);
 router.patch("issue/:issueID", checkToken, validUpdate, Track.updateIssue);
 router.delete("issue/:issueID", checkToken, Track.deleteIssue);
 router.get("/issues", Track.getAllIssues);
-router.get("/projects", getRecentProjects);
+router.get("/projects", Track.getAllProjects);
 
 export default router;

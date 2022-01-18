@@ -71,6 +71,12 @@ const findIssue = async (columns, condition) => {
   const { rows } = await pool.query(query);
   return rows;
 };
+// get projects
+const findProject = async (columns, condition) => {
+  const query = `SELECT ${columns} FROM projects AS p,users as u ${condition};`;
+  const { rows } = await pool.query(query);
+  return rows;
+};
 // get curent user
 const findCurrentUser = async (id) => {
   const query = `SELECT * FROM users WHERE id=${id};`;
@@ -144,6 +150,7 @@ export default {
   query,
   userUpdate,
   findIssue,
+  findProject,
   findCurrentUser,
   updateIssue,
   dataCreate,
