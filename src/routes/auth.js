@@ -1,11 +1,11 @@
 import { Router } from "express";
 import User from "../controllers/users";
-import { validSignup, validSignin ,validInvite} from "../helpers/validations";
+import { validSignup, validSignin, validInvite } from "../helpers/validations";
 import { checkToken } from "../helpers/auth";
 const router = Router();
 router.post("/signup/:key", validSignup, User.signUp);
 router.post("/invite", checkToken, validInvite, User.InviteUser);
 router.post("/signin", validSignin, User.signIn);
 router.patch("/user", checkToken, User.UpdateUser);
-router.get("/user", checkToken, User.currentUser);
+router.get("/user", checkToken, User.invitedUser);
 export default router;

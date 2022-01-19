@@ -77,11 +77,11 @@ const findProject = async (columns, condition) => {
   const { rows } = await pool.query(query);
   return rows;
 };
-// get curent user
-const findCurrentUser = async (id) => {
-  const query = `SELECT * FROM users WHERE id=${id};`;
+// get invited user
+const findInvitedUser = async (email) => {
+  const query = `SELECT * FROM users WHERE email='${email}';`;
   const { rows } = await pool.query(query);
-  return rows;
+  return rows[0];
 };
 
 // delete an Issue
@@ -151,7 +151,7 @@ export default {
   userUpdate,
   findIssue,
   findProject,
-  findCurrentUser,
+  findInvitedUser,
   updateIssue,
   dataCreate,
   deleteIssue,

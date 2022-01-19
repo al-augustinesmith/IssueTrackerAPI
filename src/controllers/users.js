@@ -172,19 +172,45 @@ export default class User {
         return serverError(res);
       });
   }
-  //get current user
-  static currentUser(req, res) {
-    const { id } = req.tokenData;
-    db.findCurrentUser(id)
+  //get invited user
+  static invitedUser(req, res) {
+    const { email, project } = req.tokenData;
+    db.findInvitedUser(email)
       .then((response) => {
+        if (!response) {
+          return serverResponse(
+            res,
+            404,
+            ...["status", 404, "error", "User not found"]
+          );
+        }
+
+        const { id, first_name, last_name, password, isadmin } = response;
+        const token = generateToken({
+          id,
+          first_name,
+          last_name,
+          email,
+          isadmin,
+        });
+
+        const loggedIn = {
+          id,
+          token,
+          first_name,
+          last_name,
+          email,
+          isadmin,
+        };
+
         return userResponse(
           res,
           200,
-          ...["status", 200, "message", "Ok", "data", response]
+          ...["status", 200, "message", "Ok", "data", loggedIn]
         );
       })
       .catch((err) => {
-        return serverError(res);
+        return serverError(res, err);
       });
   }
 }
