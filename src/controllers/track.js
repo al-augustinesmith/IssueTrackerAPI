@@ -1,7 +1,7 @@
 import { serverResponse, serverError } from "../helpers/Response";
 import imageUpload from "../middleware/cloudinary";
 import db from "../database";
-import { sendIssueToJira, createProjectToJira } from "../config/database";
+import { sendIssueToJira } from "../config/database";
 const Track = {
   async addProject(req, res) {
     try {
@@ -13,7 +13,6 @@ const Track = {
       const values = `'${id}','${title}', '${description}',ARRAY[${id}]`;
       db.dataCreate(res, table, columns, values, condition)
         .then((response) => {
-          createProjectToJira(title, description);
           return response;
         })
         .catch((err) => {
