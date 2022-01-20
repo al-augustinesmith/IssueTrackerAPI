@@ -23,12 +23,9 @@ const insertData = async () => {
   // default admin pass is: admin12
   const adminInsert = `INSERT INTO users(first_name,last_name,email,address,password,phoneNumber,isAdmin) 
   VALUES('Charles','NDAYISABA','admin@tracker.rw','Kigali','$2a$08$Pc0B3oN5Q8uM.jGrAvQdIuDlP58avOycdzVdNEYREc5CiQChc9fjG','0785856892',true)`;
-  const projectInsert = `INSERT INTO projects(title,description,owner,people) 
-  VALUES('Poker','Poker Game','1','{1,2,3}')`;
 
   try {
     await pool.query(adminInsert);
-    await pool.query(projectInsert);
     console.log("Data Inserted");
   } catch (err) {
     console.log(`${err}, Inserted failed`);
@@ -44,16 +41,10 @@ const usersTable = `CREATE TABLE IF NOT EXISTS users(
     phoneNumber VARCHAR(10) NOT NULL,
     isAdmin BOOLEAN DEFAULT false
   );`;
-const projectsTable = `CREATE TABLE IF NOT EXISTS projects(
-    id SERIAL PRIMARY KEY NOT NULL,
-    title VARCHAR(80) NOT NULL,
-    description VARCHAR(80) NOT NULL,
-    owner INTEGER REFERENCES users(id) NOT NULL,
-    people INTEGER ARRAY
-  );`;
+
 const uProTable = `CREATE TABLE IF NOT EXISTS userProjects(
     id SERIAL PRIMARY KEY NOT NULL,
-    project INTEGER REFERENCES projects(id) NOT NULL,
+    projectID VARCHAR(16) NOT NULL,
     invite_key text NOT NULL,
     email VARCHAR(200) NOT NULL,
     joined BOOLEAN DEFAULT false
@@ -63,13 +54,13 @@ const issuesTable = `CREATE TABLE IF NOT EXISTS issues(
     title VARCHAR(80) NOT NULL,
     description VARCHAR(80) NOT NULL,
     reporter INTEGER REFERENCES users(id) NOT NULL,
-    project INTEGER REFERENCES projects(id) NOT NULL,
-    screenshot text NOT NULL
+    projectID VARCHAR(16) NOT NULL,
+    screenshot text NOT NULL,
+    sent BOOLEAN DEFAULT false
   );`;
 const createAllTables = async () => {
   try {
     await pool.query(usersTable);
-    await pool.query(projectsTable);
     await pool.query(uProTable);
     await pool.query(issuesTable);
     console.log("created");

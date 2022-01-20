@@ -3,14 +3,18 @@ import imageUpload from "../middleware/cloudinary";
 import db from "../database";
 import { sendIssueToJira } from "../config/database";
 const Track = {
-  async addProject(req, res) {
+  async addIssue(req, res) {
     try {
       const { id } = req.tokenData;
-      const { title, description } = req.body;
-      const table = "projects";
-      const columns = `owner, title, description,people`;
-      const condition = `WHERE owner ='${id}' AND title='${title}' AND description='${description}'`;
-      const values = `'${id}','${title}', '${description}',ARRAY[${id}]`;
+      let screenshot =
+        req.files != (null || undefined)
+          ? await imageUpload(req.files.screenshot)
+          : req.body.screenshot || "";
+      const { title, description, projectID } = req.body;
+      const table = "issues";
+      const columns = `reporter, title, description,projectID,screenshot`;
+      const condition = `WHERE reporter ='${id}' AND projectID='${projectID}' AND title='${title}' AND description='${description}'`;
+      const values = `'${id}','${title}', '${description}','${projectID}', '${screenshot}'`;
       db.dataCreate(res, table, columns, values, condition)
         .then((response) => {
           return response;
@@ -22,61 +26,10 @@ const Track = {
       return serverError(res, err);
     }
   },
-  getAllProjects(req, res) {
+  async sendToJira(req, res) {
     try {
-      const columns = `p.id,p.owner, p.title, p.description,p.people`;
-      let condition = `WHERE u.id=p.owner`;
-      if (req.tokenData) {
-        const { id, isadmin } = req.tokenData;
-        if (isadmin === 1) {
-          condition = `WHERE u.id=p.owner`;
-        } else {
-          condition = `WHERE u.id=p.owner AND u.id = '${id}'`;
-        }
-      }
-      db.findProject(columns, condition)
-        .then((response) => {
-          if (!response.length)
-            return serverResponse(
-              res,
-              404,
-              ...["status", 404, "message", `Data not fund.`]
-            );
-
-          return serverResponse(
-            res,
-            200,
-            ...["status", 200, "message", "Ok", "data", response]
-          );
-        })
-        .catch((err) => {
-          return serverError(res);
-        });
-    } catch (err) {
-      return serverError(res);
-    }
-  },
-
-  async addIssue(req, res) {
-    try {
-      const { id } = req.tokenData;
-      let screenshot =
-        req.files != (null || undefined)
-          ? await imageUpload(req.files.screenshot)
-          : req.body.screenshot || "";
-      const { title, description, project } = req.body;
-      const table = "issues";
-      const columns = `reporter, title, description,project,screenshot`;
-      const condition = `WHERE reporter ='${id}' AND project='${project}' AND title='${title}' AND description='${description}'`;
-      const values = `'${id}','${title}', '${description}','${project}', '${screenshot}'`;
-      db.dataCreate(res, table, columns, values, condition)
-        .then((response) => {
-          sendIssueToJira(title, description);
-          return response;
-        })
-        .catch((err) => {
-          return serverError(res, err);
-        });
+      const { title, description, projectID } = req.body;
+      return sendIssueToJira(res, title, description, projectID);
     } catch (err) {
       return serverError(res, err);
     }
@@ -130,11 +83,11 @@ const Track = {
   },
   getAllIssues(req, res) {
     try {
-      const columns = `I.id,I.title,I.description, I.screenshot,p.title as project_name, u.email AS reporter_email`;
-      let condition = `WHERE u.id=I.reporter and I.project=p.id`;
+      const columns = `I.id,I.title,I.description, I.screenshot,I.projectID, u.email AS reporter_email`;
+      let condition = `WHERE u.id=I.reporter`;
       if (req.tokenData) {
         const { id } = req.tokenData;
-        condition = `WHERE u.id=I.reporter and I.project=p.id AND u.id = '${id}'`;
+        condition = `WHERE u.id=I.reporter AND u.id = '${id}'`;
       }
       db.findIssue(columns, condition)
         .then((response) => {
