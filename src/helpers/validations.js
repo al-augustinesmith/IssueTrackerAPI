@@ -8,7 +8,7 @@ const project = Joi.object().keys({
 const issue = Joi.object().keys({
   title: Joi.string().required(),
   description: Joi.string().required(),
-  project: Joi.number().required(),
+  projectID: Joi.number().required(),
   screenshot: Joi.string(),
 });
 const iUpdate = Joi.object().keys({
@@ -34,7 +34,7 @@ const signup = Joi.object().keys({
 });
 const invite = Joi.object().keys({
   url: Joi.string().uri().label("Source of invite(Website URL)").required(),
-  project: Joi.number().required(),
+  projectID: Joi.number().required(),
   email: Joi.string()
     .email()
     .regex(/^\S+@\S+\.\S+$/)

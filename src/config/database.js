@@ -15,11 +15,11 @@ const DB =
     ? process.env.DB_DEV_URL
     : process.env.DB_URL;
 
-const sendIssueToJira = async (title, description) => {
+const sendIssueToJira = async (res,title, description, ID) => {
   const Data = {
     fields: {
       project: {
-        key: "IT",
+        id: ID,
       },
       summary: title,
       issuetype: {
@@ -51,7 +51,13 @@ const sendIssueToJira = async (title, description) => {
       console.log(`Response: ${response.status} ${response.statusText}`);
       return response.text();
     })
-    .then((text) => console.log(text))
+    .then((text) => {
+      return serverResponse(
+        res,
+        200,
+        ...["status", 200, "message", "Ok", "data", JSON.parse(text)]
+      );
+    })
     .catch((err) => console.error(err));
 };
 

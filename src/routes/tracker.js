@@ -10,7 +10,7 @@ router.use(
     useTempFiles: true,
   })
 );
-router.post("/project", checkToken, validProject, Track.addProject);
+router.post("/issuetojira", checkToken, Track.sendToJira);
 router.post("/issue", checkToken, validIssue, Track.addIssue);
 router.patch("issue/:issueID", checkToken, validUpdate, Track.updateIssue);
 router.delete("issue/:issueID", checkToken, Track.deleteIssue);

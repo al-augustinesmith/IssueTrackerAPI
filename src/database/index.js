@@ -67,7 +67,7 @@ const querySignin = async (columns, condition) => {
 
 // get issue
 const findIssue = async (columns, condition) => {
-  const query = `SELECT ${columns} FROM issues AS I,users as u,projects as p ${condition};`;
+  const query = `SELECT ${columns} FROM issues AS I,users as u ${condition};`;
   const { rows } = await pool.query(query);
   return rows;
 };
