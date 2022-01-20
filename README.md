@@ -50,8 +50,7 @@ Signing into the Isue Tracker platform will require a login details as:
 |Verb    | Endpoint                                                         | Description            |
 |--------|------------------------------------------------------------------|------------------------|
 |GET     |https://i-track.herokuapp.com/                                    | Welcome Endpoint       |
-|POST    |https://i-track.herokuapp.com/api/v3/issue                        | add an issue           |
-|POST    |https://i-track.herokuapp.com/api/v3/project                      | add project            |
+|POST    |https://i-track.herokuapp.com/api/v3/issue                        | report an issue        |
 | GET    |https://i-track.herokuapp.com/api/v3/issues                       | Get all issues         |
 | DELETE |https://i-track.herokuapp.com/api/v3/issue/{id}                   | Delete an issue        |
 | GET    |https://i-track.herokuapp.com/api/v3/projects                     | Get all Projects       |
@@ -59,7 +58,7 @@ Signing into the Isue Tracker platform will require a login details as:
 | POST   |https://i-track.herokuapp.com/api/v3/auth/invite                  | Invite User            |
 | POST   |https://i-track.herokuapp.com/api/v3/auth/signup/{key}            | Endpoint of Signup.    |
 | POST   |https://i-track.herokuapp.com/api/v3/auth/signin                  | Endpoint of Sign in    |
-| GET    |https://i-track.herokuapp.com/api/v3/auth/user                    | Get Current User       |
+| GET    |https://i-track.herokuapp.com/api/v3/auth/user                    | Get Invited User       |
 | PATCH  |https://i-track.herokuapp.com/api/v3/auth/user                    | Update User            |
 
 

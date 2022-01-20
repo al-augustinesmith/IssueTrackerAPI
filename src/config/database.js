@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import "dotenv/config";
-import { Version2Client } from "jira.js";
+import { serverResponse, serverError } from "../helpers/Response";
+
 const MAIN_URL = process.env.JIRA_URL;
 const HEADERS = {
   Authorization: `Basic ${Buffer.from(process.env.JIRA_KEY).toString(
@@ -53,35 +54,23 @@ const sendIssueToJira = async (title, description) => {
     .then((text) => console.log(text))
     .catch((err) => console.error(err));
 };
-const createProjectToJira = async (title, description) => {
-  const Data = {
-    name: title,
-    description: description,
-    key: title.substring(0, 2).toUpperCase(),
-  };
-  await fetch(`${MAIN_URL}/rest/api/3/project`, {
-    method: "POST",
-    headers: HEADERS,
-    body: JSON.stringify(Data),
-  })
-    .then((response) => {
-      console.log(`Response: ${response.status} ${response.statusText}`);
-      return response.text();
-    })
-    .then((text) => console.log(text))
-    .catch((err) => console.error(err));
-};
-const getRecentProjects = () => {
-  fetch(`${MAIN_URL}/rest/api/3/project/recent`, {
+
+const getRecentProjects = async (req, res) => {
+  fetch(`${MAIN_URL}/rest/api/3/project?expand=description`, {
     method: "GET",
     headers: HEADERS,
   })
     .then((response) => {
-      console.log(`Response: ${response.status} ${response.statusText}`);
       return response.text();
     })
-    .then((text) => text)
+    .then((text) => {
+      return serverResponse(
+        res,
+        200,
+        ...["status", 200, "message", "Ok", "data", JSON.parse(text)]
+      );
+    })
     .catch((err) => console.error(err));
 };
 
-export { DB, sendIssueToJira, getRecentProjects, createProjectToJira };
+export { DB, sendIssueToJira, getRecentProjects };
