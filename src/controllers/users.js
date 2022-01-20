@@ -65,13 +65,13 @@ export default class User {
   }
   static InviteUser(req, res) {
     try {
-      const { email, project, url } = req.body;
+      const { email, projectID, url } = req.body;
       const { first_name, last_name } = req.tokenData;
-      const invite_key = generateKey({ email, project });
+      const invite_key = generateKey({ email, projectID });
       const table = "userProjects";
-      const columns = `project,invite_key,email,joined`;
-      const values = `'${project}', '${invite_key}', '${email}',false`;
-      const condition = `WHERE email='${email}' AND project='${project}'`;
+      const columns = `projectID,invite_key,email,joined`;
+      const values = `'${projectID}', '${invite_key}', '${email}',false`;
+      const condition = `WHERE email='${email}' AND projectID='${projectID}'`;
       db.dataCreate(res, table, columns, values, condition)
         .then((response) => {
           sendEmail({ first_name, last_name }, email, invite_key, url).catch(
@@ -80,10 +80,10 @@ export default class User {
           return response;
         })
         .catch((err) => {
-          return serverError(res);
+          return serverError(res,err);
         });
     } catch (err) {
-      return serverError(res);
+      return serverError(res,err);
     }
   }
   // update user info
@@ -181,7 +181,7 @@ export default class User {
           return serverResponse(
             res,
             404,
-            ...["status", 404, "error", "User not found"]
+            ...["status", 404, "email", email]
           );
         }
 
