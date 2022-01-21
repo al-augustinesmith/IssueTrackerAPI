@@ -18,15 +18,17 @@ export default class User {
       const table = "users";
       const columns = `first_name, last_name, email, password, phonenumber,address`;
       const values = `'${first_name}', '${last_name}', '${email}', '${password}', '${phoneNumber}', '${address}'`;
-      db.queryCreate(table, columns, values)
+      const condition= `WHERE email='${email}'`;
+      db.acceptInvite(table, columns, values,condition)
         .then((userRes) => {
-          const { id, first_name, last_name, email, isadmin } = userRes;
+          const { id, first_name, last_name, email, isadmin,projects } = userRes;
           const token = generateToken({
             id,
             email,
             first_name,
             last_name,
             isadmin,
+            projects
           });
 
           const SignedUp = {
@@ -38,6 +40,7 @@ export default class User {
             phoneNumber,
             address,
             isadmin,
+            projects
           };
           return userResponse(
             res,
@@ -135,7 +138,7 @@ export default class User {
           );
         }
 
-        const { id, first_name, last_name, password, isadmin } = response;
+        const { id, first_name, last_name, password, isadmin,projects } = response;
         const decryptedPassword = comparePassword(password, checkPassword);
         if (!decryptedPassword) {
           return serverResponse(
@@ -150,6 +153,7 @@ export default class User {
           last_name,
           email,
           isadmin,
+          projects
         });
 
         const loggedIn = {
@@ -158,6 +162,7 @@ export default class User {
           first_name,
           last_name,
           email,
+          projects,
           isadmin,
         };
 
@@ -185,13 +190,14 @@ export default class User {
           );
         }
 
-        const { id, first_name, last_name, password, isadmin } = response;
+        const { id, first_name, last_name, password, isadmin,projects } = response;
         const token = generateToken({
           id,
           first_name,
           last_name,
           email,
           isadmin,
+          projects
         });
 
         const loggedIn = {
@@ -201,6 +207,7 @@ export default class User {
           last_name,
           email,
           isadmin,
+          projects
         };
 
         return userResponse(

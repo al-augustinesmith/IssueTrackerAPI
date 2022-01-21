@@ -32,6 +32,21 @@ const queryCreate = async (table, columns, values) => {
   return Result[0];
 };
 
+// insert into invitation table
+const acceptInvite = async (table, columns, values,condition) => {
+  const queryString = `INSERT INTO ${table} (${columns}) VALUES (${values}) RETURNING *;`;
+  const { rows: Result } = await pool.query(queryString);
+  let user =Result[0];
+  const projectString = `SELECT projectid FROM userProjects ${condition};`;
+  let data= (await pool.query(projectString)).rows[0];
+  user.projects=[];
+  if(data && user){
+    user.projects=data
+    return user;
+  }
+  return user;
+};
+
 // update User
 const userUpdate = async (table, values, userID) => {
   const queryString = `UPDATE ${table} SET ${values} WHERE id=${userID} RETURNING *;`;
@@ -61,8 +76,15 @@ const dataCreate = async (res, table, columns, values, condition) => {
 // Singin
 const querySignin = async (columns, condition) => {
   const queryString = `SELECT ${columns} FROM users ${condition};`;
-  const { rows } = await pool.query(queryString);
-  return rows[0];
+  let user = (await pool.query(queryString)).rows[0];
+  const projectString = `SELECT projectid FROM userProjects ${condition};`;
+  let {rows:Result}= await pool.query(projectString);
+  user.projects=[];
+  if(Result && user){
+    user.projects=Result
+    return user;
+  }
+  return user;
 };
 
 // get issue
@@ -80,8 +102,15 @@ const findProject = async (columns, condition) => {
 // get invited user
 const findInvitedUser = async (email) => {
   const query = `SELECT * FROM users WHERE email='${email}';`;
-  const { rows } = await pool.query(query);
-  return rows[0];
+  let user = (await pool.query(query)).rows[0];
+  const projectString = `SELECT projectid FROM userProjects WHERE email='${email}';`;
+  let {rows:Result}= await pool.query(projectString);
+  user.projects=[];
+  if(Result && user){
+    user.projects=Result
+    return user;
+  }
+  return user;
 };
 
 // delete an Issue
@@ -155,6 +184,7 @@ export default {
   updateIssue,
   dataCreate,
   deleteIssue,
+  acceptInvite,
   queryCreate,
   querySignin,
 };
