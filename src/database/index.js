@@ -44,8 +44,8 @@ const dataCreate = async (res, table, columns, values, condition) => {
   if ((await pool.query(issue)).rows[0]) {
     return serverResponse(
       res,
-      404,
-      ...["status", 404, "error", `Data Already Inserted!`]
+      202,
+      ...["status", 202, "error", `Data Already Inserted!`]
     );
   }
 

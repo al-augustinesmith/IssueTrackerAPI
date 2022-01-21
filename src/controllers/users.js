@@ -55,8 +55,8 @@ export default class User {
         .catch((err) => {
           return serverResponse(
             res,
-            403,
-            ...["status", 403, "error", `This Email Already exists.`]
+            202,
+            ...["status", 202, "error", `This Email Already exists.`]
           );
         });
     } catch (err) {
@@ -180,8 +180,8 @@ export default class User {
         if (!response) {
           return serverResponse(
             res,
-            404,
-            ...["status", 404, "email", email]
+            202,
+            ...["status", 202, "email", email]
           );
         }
 
