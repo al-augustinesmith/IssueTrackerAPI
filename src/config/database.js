@@ -62,7 +62,7 @@ const sendIssueToJira = async (res,title, description, ID) => {
 };
 
 const getRecentProjects = async (req, res) => {
-  fetch(`${MAIN_URL}/rest/api/3/project?expand=description`, {
+  fetch(`${MAIN_URL}/rest/api/3/project?expand=lead`, {
     method: "GET",
     headers: HEADERS,
   })
