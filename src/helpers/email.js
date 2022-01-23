@@ -17,7 +17,7 @@ const sendEmail = async (sender, email, key, url) => {
     from: '"Issue Tracker 👻" <chazndayisaba@gmail.com>', // sender address
     to: email, // list of receivers
     subject: `${sender.first_name} is waiting for you to join the Project ✔`, // Subject line
-    html: `<b>Your team is waiting for you to join the Project</b><br/> ${sender.first_name} has invited you to collaborate on ${url} .<br/>
+    html: `<b>Your team is waiting for you to join the Project</b><br/> ${sender.first_name} has invited you to collaborate on <a href="${url}/register/${key}">Issue Tracker</a> .<br/>
     Kindly <a href="${url}/register/${key}">Click here</a> to join the project.`,
   });
 };
