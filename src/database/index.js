@@ -103,6 +103,7 @@ const findProject = async (columns, condition) => {
 const findInvitedUser = async (email) => {
   const query = `SELECT * FROM users WHERE email='${email}';`;
   let user = (await pool.query(query)).rows[0];
+  if(user){
   const projectString = `SELECT projectid FROM userProjects WHERE email='${email}';`;
   let {rows:Result}= await pool.query(projectString);
   user.projects=[];
@@ -110,6 +111,7 @@ const findInvitedUser = async (email) => {
     user.projects=Result
     return user;
   }
+}
   return user;
 };
 

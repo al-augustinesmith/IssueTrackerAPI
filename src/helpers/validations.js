@@ -33,7 +33,7 @@ const signup = Joi.object().keys({
   address: Joi.string().required(),
 });
 const invite = Joi.object().keys({
-  url: Joi.string().uri().label("Source of invite(Website URL)").required(),
+  url: Joi.string().required(),
   projectID: Joi.number().required(),
   email: Joi.string()
     .email()
