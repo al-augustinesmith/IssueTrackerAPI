@@ -28,7 +28,7 @@ const signup = Joi.object().keys({
   last_name: Joi.string().min(3).max(45).required(),
   password: Joi.string().min(6).max(50).required(),
   phoneNumber: Joi.string()
-    .regex(/[0-9]{10}$/)
+    .regex(/[0-9]{10,15}$/)
     .required(),
   address: Joi.string().required(),
 });
