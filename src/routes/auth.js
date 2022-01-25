@@ -8,4 +8,5 @@ router.post("/invite", checkToken, validInvite, User.InviteUser);
 router.post("/signin", validSignin, User.signIn);
 router.patch("/user", checkToken, User.UpdateUser);
 router.get("/user", checkToken, User.invitedUser);
+router.get("/users", checkToken, User.allUsers);
 export default router;

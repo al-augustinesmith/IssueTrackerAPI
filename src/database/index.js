@@ -114,6 +114,13 @@ const findInvitedUser = async (email) => {
 }
   return user;
 };
+// get all users
+const findAllUsers = async () => {
+  const query = `SELECT * FROM users;`;
+  let {rows:Result} = await pool.query(query);
+
+  return Result;
+};
 
 // delete an Issue
 const deleteIssue = async (res, userId, isAdmin, IId) => {
@@ -186,6 +193,7 @@ export default {
   updateIssue,
   dataCreate,
   deleteIssue,
+  findAllUsers,
   acceptInvite,
   queryCreate,
   querySignin,
