@@ -220,4 +220,34 @@ export default class User {
         return serverError(res, err);
       });
   }
+  //get all users
+  static allUsers(req, res) {
+    const { isadmin} = req.tokenData;
+    if(!isadmin){
+      return serverResponse(
+        res,
+        401,
+        ...["status",401 , "error", 'Only admin accounts']
+      );
+    }
+    db.findAllUsers()
+      .then((response) => {
+        if (!response) {
+          return serverResponse(
+            res,
+            202,
+            ...["status", 202, "email", email]
+          );
+        }
+
+        return userResponse(
+          res,
+          200,
+          ...["status", 200, "message", "Ok", "data", response]
+        );
+      })
+      .catch((err) => {
+        return serverError(res, err);
+      });
+  }
 }
