@@ -12,37 +12,17 @@ import { serverError, serverResponse, userResponse } from "../helpers/Response";
 export default class User {
   static signUp(req, res) {
     try {
-      let { first_name, last_name, address, password, phoneNumber } = req.body;
+      let { first_name, last_name, organisation,representative } = req.body;
       const { key } = req.params;
       let { email, project } = verifyKey(key);
-      password = hashedPassword(password);
       const table = "users";
-      const columns = `first_name, last_name, email, password, phonenumber,address`;
-      const values = `'${first_name}', '${last_name}', '${email}', '${password}', '${phoneNumber}', '${address}'`;
+      const columns = `first_name, last_name, email, organisation,representative`;
+      const values = `'${first_name}', '${last_name}', '${email}', '${organisation}', '${representative}'`;
       const condition= `WHERE email='${email}'`;
       db.acceptInvite(table, columns, values,condition)
-        .then((userRes) => {
-          const { id, first_name, last_name, email, isadmin,projects } = userRes;
-          const token = generateToken({
-            id,
-            email,
-            first_name,
-            last_name,
-            isadmin,
-            projects
-          });
-
-          const SignedUp = {
-            id,
-            token,
-            first_name,
-            last_name,
-            email,
-            phoneNumber,
-            address,
-            isadmin,
-            projects
-          };
+        .then((response) => {
+          const token = generateToken(response);
+          response.token=token
           return userResponse(
             res,
             201,
@@ -52,11 +32,12 @@ export default class User {
               "message",
               "user Created Successfully",
               "data",
-              SignedUp,
+              response,
             ]
           );
         })
         .catch((err) => {
+          console.log(err)
           return serverResponse(
             res,
             202,
@@ -64,6 +45,7 @@ export default class User {
           );
         });
     } catch (err) {
+      console.log(err)
       return serverError(res);
     }
   }
