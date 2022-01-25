@@ -9,7 +9,7 @@ const sendEmail = async (sender, email, key, url) => {
     secure: false, // true for 465, false for other ports
     auth: {
       user: process.env.SENDER_EMAIL,
-      pass: process.env.PSWD,
+      pass: process.env.SENDER_PSWD,
     },
   });
   // send mail with defined transport object
