@@ -83,7 +83,7 @@ const Track = {
   },
   getAllIssues(req, res) {
     try {
-      const columns = `I.id,I.title,I.description, I.screenshot,I.projectID, u.email AS reporter_email`;
+      const columns = `I.id,I.title,I.description, I.screenshot,I.projectID,I.idate, u.email AS reporter_email`;
       let condition = `WHERE u.id=I.reporter`;
       if (req.tokenData) {
         const { id } = req.tokenData;

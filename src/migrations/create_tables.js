@@ -6,11 +6,11 @@ const pool = new Pool({
 
 const dropping = async () => {
   const userMigration = `DROP TABLE IF EXISTS users CASCADE`;
-  const uProMigration = `DROP TABLE IF EXISTS userProjects CASCADE`;
+  // const uProMigration = `DROP TABLE IF EXISTS userProjects CASCADE`;
   const issueMigration = `DROP TABLE IF EXISTS issues CASCADE`;
   try {
     await pool.query(userMigration);
-    await pool.query(uProMigration);
+    // await pool.query(uProMigration);
     await pool.query(issueMigration);
     console.log("Tables dropped");
   } catch (err) {
@@ -18,7 +18,6 @@ const dropping = async () => {
   }
 };
 const insertData = async () => {
-  // default admin pass is: admin12
   const adminInsert = `INSERT INTO users(first_name,last_name,email,organisation,representative,isAdmin) 
   VALUES('Charles','NDAYISABA','nccharles1@gmail.com','Issue Tracker','',true)`;
 
@@ -53,7 +52,7 @@ const issuesTable = `CREATE TABLE IF NOT EXISTS issues(
     reporter INTEGER REFERENCES users(id) NOT NULL,
     projectID VARCHAR(16) NOT NULL,
     screenshot text NOT NULL,
-    idate text NOT NULL,
+    idate TIMESTAMP DEFAULT NOW(),
     sent BOOLEAN DEFAULT false
   );`;
 const createAllTables = async () => {
