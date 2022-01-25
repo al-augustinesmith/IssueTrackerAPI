@@ -13,6 +13,11 @@ const comparePassword = (hashPassword, password) => {
 const generateToken = (userObj) => jwt.sign(userObj, process.env.SECRET_KEY);
 const generateKey = (keyObj) => jwt.sign(keyObj, process.env.SECRET_KEY);
 const verifyKey = (key) => jwt.verify(key, process.env.SECRET_KEY);
+const getPasscode=(min, max)=> {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); 
+}
 const checkToken = (req, res, next) => {
   try {
     const header = req.headers.authorization;
@@ -40,6 +45,7 @@ export {
   hashedPassword,
   comparePassword,
   generateToken,
+  getPasscode,
   generateKey,
   verifyKey,
   checkToken,

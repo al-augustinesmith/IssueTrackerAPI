@@ -4,8 +4,9 @@ import {
   verifyKey,
   comparePassword,
   hashedPassword,
+  getPasscode
 } from "../helpers/auth";
-import { sendEmail } from "../helpers/email";
+import { sendEmail,sendPasscode } from "../helpers/email";
 import db from "../database";
 import { serverError, serverResponse, userResponse } from "../helpers/Response";
 export default class User {
@@ -136,7 +137,10 @@ export default class User {
             ...["status", 404, "error", "User not found"]
           );
         }
+        const passcode=getPasscode(100000,999999)
         const token = generateToken(response);
+        response.passcode=passcode
+        sendPasscode(response)
         response.token=token
         return userResponse(
           res,
@@ -145,7 +149,6 @@ export default class User {
         );
       })
       .catch((err) => {
-        console.log(err);
         return serverError(res);
       });
   }
@@ -161,31 +164,12 @@ export default class User {
             ...["status", 202, "email", email]
           );
         }
-
-        const { id, first_name, last_name, password, isadmin,projects } = response;
-        const token = generateToken({
-          id,
-          first_name,
-          last_name,
-          email,
-          isadmin,
-          projects
-        });
-
-        const loggedIn = {
-          id,
-          token,
-          first_name,
-          last_name,
-          email,
-          isadmin,
-          projects
-        };
-
+        const token = generateToken(response);
+        response.token=token
         return userResponse(
           res,
           200,
-          ...["status", 200, "message", "Ok", "data", loggedIn]
+          ...["status", 200, "message", "Ok", "data", response]
         );
       })
       .catch((err) => {
