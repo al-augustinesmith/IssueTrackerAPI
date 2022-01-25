@@ -17,7 +17,6 @@ const iUpdate = Joi.object().keys({
   screenshot: Joi.string(),
 });
 const login = Joi.object().keys({
-  password: Joi.required(),
   email: Joi.string()
     .email()
     .regex(/^\S+@\S+\.\S+$/)
@@ -85,18 +84,16 @@ const validSignup = (req, res, next) => {
   );
 };
 const validSignin = (req, res, next) => {
-  let { email, password } = req.body;
+  let { email} = req.body;
   email = email.toLowerCase().trim();
-  password = password.trim();
-  if (!email || !password) {
+  if (!email) {
     return serverResponse(
       res,
       422,
-      ...["status", 422, "error", "All field required"]
+      ...["status", 422, "error", "Email required"]
     );
   }
   req.body.email = email;
-  req.body.password = password;
   return Joi.validate(req.body, login, (err, value) => {
     if (err) {
       return error(err, res);

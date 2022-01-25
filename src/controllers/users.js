@@ -124,9 +124,8 @@ export default class User {
   }
   // user signin
   static signIn(req, res) {
-    const { email, password } = req.body;
-    const checkPassword = password;
-    const columns = `id, first_name, last_name,phonenumber, password,isadmin`;
+    const { email } = req.body;
+    const columns = `*`;
     const values = `WHERE email='${email}'`;
     db.querySignin(columns, values)
       .then((response) => {
@@ -137,39 +136,12 @@ export default class User {
             ...["status", 404, "error", "User not found"]
           );
         }
-
-        const { id, first_name, last_name, password, isadmin,projects } = response;
-        const decryptedPassword = comparePassword(password, checkPassword);
-        if (!decryptedPassword) {
-          return serverResponse(
-            res,
-            422,
-            ...["status", 422, "error", "Incorrect Password"]
-          );
-        }
-        const token = generateToken({
-          id,
-          first_name,
-          last_name,
-          email,
-          isadmin,
-          projects
-        });
-
-        const loggedIn = {
-          id,
-          token,
-          first_name,
-          last_name,
-          email,
-          projects,
-          isadmin,
-        };
-
+        const token = generateToken(response);
+        response.token=token
         return userResponse(
           res,
           200,
-          ...["status", 200, "message", "Ok", "data", loggedIn]
+          ...["status", 200, "message", "Ok", "data", response]
         );
       })
       .catch((err) => {
