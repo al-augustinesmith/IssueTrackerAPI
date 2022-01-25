@@ -4,44 +4,25 @@ import {
   verifyKey,
   comparePassword,
   hashedPassword,
+  getPasscode
 } from "../helpers/auth";
-import { sendEmail } from "../helpers/email";
+import { sendEmail,sendPasscode } from "../helpers/email";
 import db from "../database";
 import { serverError, serverResponse, userResponse } from "../helpers/Response";
 export default class User {
   static signUp(req, res) {
     try {
-      let { first_name, last_name, address, password, phoneNumber } = req.body;
+      let { first_name, last_name, organisation,representative } = req.body;
       const { key } = req.params;
       let { email, project } = verifyKey(key);
-      password = hashedPassword(password);
       const table = "users";
-      const columns = `first_name, last_name, email, password, phonenumber,address`;
-      const values = `'${first_name}', '${last_name}', '${email}', '${password}', '${phoneNumber}', '${address}'`;
+      const columns = `first_name, last_name, email, organisation,representative`;
+      const values = `'${first_name}', '${last_name}', '${email}', '${organisation}', '${representative}'`;
       const condition= `WHERE email='${email}'`;
       db.acceptInvite(table, columns, values,condition)
-        .then((userRes) => {
-          const { id, first_name, last_name, email, isadmin,projects } = userRes;
-          const token = generateToken({
-            id,
-            email,
-            first_name,
-            last_name,
-            isadmin,
-            projects
-          });
-
-          const SignedUp = {
-            id,
-            token,
-            first_name,
-            last_name,
-            email,
-            phoneNumber,
-            address,
-            isadmin,
-            projects
-          };
+        .then((response) => {
+          const token = generateToken(response);
+          response.token=token
           return userResponse(
             res,
             201,
@@ -51,11 +32,12 @@ export default class User {
               "message",
               "user Created Successfully",
               "data",
-              SignedUp,
+              response,
             ]
           );
         })
         .catch((err) => {
+          console.log(err)
           return serverResponse(
             res,
             202,
@@ -63,6 +45,7 @@ export default class User {
           );
         });
     } catch (err) {
+      console.log(err)
       return serverError(res);
     }
   }
@@ -124,9 +107,8 @@ export default class User {
   }
   // user signin
   static signIn(req, res) {
-    const { email, password } = req.body;
-    const checkPassword = password;
-    const columns = `id, first_name, last_name,phonenumber, password,isadmin`;
+    const { email } = req.body;
+    const columns = `*`;
     const values = `WHERE email='${email}'`;
     db.querySignin(columns, values)
       .then((response) => {
@@ -137,43 +119,18 @@ export default class User {
             ...["status", 404, "error", "User not found"]
           );
         }
-
-        const { id, first_name, last_name, password, isadmin,projects } = response;
-        const decryptedPassword = comparePassword(password, checkPassword);
-        if (!decryptedPassword) {
-          return serverResponse(
-            res,
-            422,
-            ...["status", 422, "error", "Incorrect Password"]
-          );
-        }
-        const token = generateToken({
-          id,
-          first_name,
-          last_name,
-          email,
-          isadmin,
-          projects
-        });
-
-        const loggedIn = {
-          id,
-          token,
-          first_name,
-          last_name,
-          email,
-          projects,
-          isadmin,
-        };
-
+        const passcode=getPasscode(100000,999999)
+        const token = generateToken(response);
+        response.passcode=passcode
+        sendPasscode(response)
+        response.token=token
         return userResponse(
           res,
           200,
-          ...["status", 200, "message", "Ok", "data", loggedIn]
+          ...["status", 200, "message", "Ok", "data", response]
         );
       })
       .catch((err) => {
-        console.log(err);
         return serverError(res);
       });
   }
@@ -189,31 +146,12 @@ export default class User {
             ...["status", 202, "email", email]
           );
         }
-
-        const { id, first_name, last_name, password, isadmin,projects } = response;
-        const token = generateToken({
-          id,
-          first_name,
-          last_name,
-          email,
-          isadmin,
-          projects
-        });
-
-        const loggedIn = {
-          id,
-          token,
-          first_name,
-          last_name,
-          email,
-          isadmin,
-          projects
-        };
-
+        const token = generateToken(response);
+        response.token=token
         return userResponse(
           res,
           200,
-          ...["status", 200, "message", "Ok", "data", loggedIn]
+          ...["status", 200, "message", "Ok", "data", response]
         );
       })
       .catch((err) => {

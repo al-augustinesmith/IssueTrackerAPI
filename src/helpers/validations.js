@@ -17,20 +17,16 @@ const iUpdate = Joi.object().keys({
   screenshot: Joi.string(),
 });
 const login = Joi.object().keys({
-  password: Joi.required(),
   email: Joi.string()
     .email()
     .regex(/^\S+@\S+\.\S+$/)
     .required(),
 });
 const signup = Joi.object().keys({
-  first_name: Joi.string().min(3).max(45).required(),
-  last_name: Joi.string().min(3).max(45).required(),
-  password: Joi.string().min(6).max(50).required(),
-  phoneNumber: Joi.string()
-    .regex(/[0-9]{10,15}$/)
-    .required(),
-  address: Joi.string().required(),
+  first_name: Joi.string().min(1).max(50).required(),
+  last_name: Joi.string().min(1).max(50).required(),
+  organisation:Joi.string(),
+  representative: Joi.string(),
 });
 const invite = Joi.object().keys({
   url: Joi.string().required(),
@@ -47,56 +43,33 @@ const error = (err, res) => {
 };
 // validations
 const validSignup = (req, res, next) => {
-  let { first_name, last_name, address, phoneNumber, password } = req.body;
+  let { first_name, last_name } = req.body;
   let { key } = req.params;
-  if (!key || !first_name || !last_name || !address || !phoneNumber) {
+  if (!key || !first_name || !last_name) {
     return serverResponse(
       res,
       422,
-      ...["status", 422, "error", "All fields required"]
+      ...["status", 422, "error", "Please fill the required fields"]
     );
   }
-  const minMaxLength = /^[\s\S]{6,50}$/;
-  const uppercaseRegex = /[A-Z]/;
-  const lowercaseRegex = /[a-z]/;
-  const phoneFormat = /[0-9]{10}$/;
-  if (!phoneFormat.test(phoneNumber)) {
-    return serverResponse(
-      res,
-      422,
-      ...["status", 422, "error", "Phone number must be valid"]
-    );
-  }
-  if (
-    minMaxLength.test(password) &&
-    (uppercaseRegex.test(password) || lowercaseRegex.test(password))
-  ) {
-    return Joi.validate(req.body, signup, (err, value) => {
-      if (err) {
-        return error(err, res);
-      }
-      return next();
-    });
-  }
-  return serverResponse(
-    res,
-    422,
-    ...["status", 422, "error", "password must be atleast 6 characters"]
-  );
+  return Joi.validate(req.body, signup, (err, value) => {
+    if (err) {
+      return error(err, res);
+    }
+    return next();
+  });
 };
 const validSignin = (req, res, next) => {
-  let { email, password } = req.body;
+  let { email} = req.body;
   email = email.toLowerCase().trim();
-  password = password.trim();
-  if (!email || !password) {
+  if (!email) {
     return serverResponse(
       res,
       422,
-      ...["status", 422, "error", "All field required"]
+      ...["status", 422, "error", "Email required"]
     );
   }
   req.body.email = email;
-  req.body.password = password;
   return Joi.validate(req.body, login, (err, value) => {
     if (err) {
       return error(err, res);

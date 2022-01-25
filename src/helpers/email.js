@@ -22,4 +22,24 @@ const sendEmail = async (sender, email, key, url) => {
   });
 };
 
-export { sendEmail };
+const sendPasscode = async (receiver) => {
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.SENDER_EMAIL,
+      pass: process.env.SENDER_PSWD,
+    },
+  });
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: `"PASSCODE | Issue Tracker 👻" <${process.env.SENDER_EMAIL}>`, // sender address
+    to: receiver.email, // list of receivers
+    subject: `${receiver.first_name} here is your PASSCODE`, // Subject line
+    html: `<b>To login</b><br/>Type this ${receiver.passcode} in the form`,
+  });
+};
+
+export { sendEmail,sendPasscode };

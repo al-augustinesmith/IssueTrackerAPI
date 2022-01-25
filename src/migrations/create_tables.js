@@ -6,13 +6,11 @@ const pool = new Pool({
 
 const dropping = async () => {
   const userMigration = `DROP TABLE IF EXISTS users CASCADE`;
-  const projectMigration = `DROP TABLE IF EXISTS projects CASCADE`;
-  const uProMigration = `DROP TABLE IF EXISTS userProjects CASCADE`;
+  // const uProMigration = `DROP TABLE IF EXISTS userProjects CASCADE`;
   const issueMigration = `DROP TABLE IF EXISTS issues CASCADE`;
   try {
     await pool.query(userMigration);
-    await pool.query(projectMigration);
-    await pool.query(uProMigration);
+    // await pool.query(uProMigration);
     await pool.query(issueMigration);
     console.log("Tables dropped");
   } catch (err) {
@@ -20,9 +18,8 @@ const dropping = async () => {
   }
 };
 const insertData = async () => {
-  // default admin pass is: admin12
-  const adminInsert = `INSERT INTO users(first_name,last_name,email,address,password,phoneNumber,isAdmin) 
-  VALUES('Charles','NDAYISABA','admin@tracker.rw','Kigali','$2a$08$Pc0B3oN5Q8uM.jGrAvQdIuDlP58avOycdzVdNEYREc5CiQChc9fjG','0785856892',true)`;
+  const adminInsert = `INSERT INTO users(first_name,last_name,email,organisation,representative,isAdmin) 
+  VALUES('Charles','NDAYISABA','nccharles1@gmail.com','Issue Tracker','',true)`;
 
   try {
     await pool.query(adminInsert);
@@ -36,9 +33,8 @@ const usersTable = `CREATE TABLE IF NOT EXISTS users(
     first_name VARCHAR(80) NOT NULL,
     last_name VARCHAR(80) NOT NULL,
     email VARCHAR(200) UNIQUE NOT NULL,
-    address VARCHAR(30) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    phoneNumber VARCHAR(10) NOT NULL,
+    organisation VARCHAR(255) NOT NULL,
+    representative VARCHAR(255) NOT NULL,
     isAdmin BOOLEAN DEFAULT false
   );`;
 
@@ -56,6 +52,7 @@ const issuesTable = `CREATE TABLE IF NOT EXISTS issues(
     reporter INTEGER REFERENCES users(id) NOT NULL,
     projectID VARCHAR(16) NOT NULL,
     screenshot text NOT NULL,
+    idate TIMESTAMP DEFAULT NOW(),
     sent BOOLEAN DEFAULT false
   );`;
 const createAllTables = async () => {

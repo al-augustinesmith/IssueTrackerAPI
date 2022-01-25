@@ -79,7 +79,9 @@ const querySignin = async (columns, condition) => {
   let user = (await pool.query(queryString)).rows[0];
   const projectString = `SELECT projectid FROM userProjects ${condition};`;
   let {rows:Result}= await pool.query(projectString);
-  user.projects=[];
+  if(user){
+    user.projects=[];
+  }
   if(Result && user){
     user.projects=Result
     return user;
