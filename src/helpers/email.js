@@ -1,11 +1,16 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
+
 const sendEmail = (sender, email, key, url) => {
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
+      type: 'OAuth2',
       user: process.env.SENDER_EMAIL,
       pass: process.env.SENDER_PSWD,
+      clientId: process.env.OAUTH_CLIENTID,
+      clientSecret: process.env.OAUTH_CLIENT_SECRET,
+      refreshToken: process.env.OAUTH_REFRESH_TOKEN
     },
   });
   const mailOptions ={
@@ -18,7 +23,7 @@ const sendEmail = (sender, email, key, url) => {
   // send mail with defined transport object
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-      console.log(error);
+      console.log(error.message);
     } else {
       console.log('Email sent: ' + info.response);
     }
@@ -26,12 +31,15 @@ const sendEmail = (sender, email, key, url) => {
 };
 
 const sendPasscode = (receiver) => {
-  // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
+      type: 'OAuth2',
       user: process.env.SENDER_EMAIL,
       pass: process.env.SENDER_PSWD,
+      clientId: process.env.OAUTH_CLIENTID,
+      clientSecret: process.env.OAUTH_CLIENT_SECRET,
+      refreshToken: process.env.OAUTH_REFRESH_TOKEN
     },
   });
   const mailOptions ={
