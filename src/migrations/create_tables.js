@@ -5,11 +5,11 @@ const pool = new Pool({
 });
 
 const dropping = async () => {
-  const userMigration = `DROP TABLE IF EXISTS users CASCADE`;
+  // const userMigration = `DROP TABLE IF EXISTS users CASCADE`;
   // const uProMigration = `DROP TABLE IF EXISTS userProjects CASCADE`;
   const issueMigration = `DROP TABLE IF EXISTS issues CASCADE`;
   try {
-    await pool.query(userMigration);
+    // await pool.query(userMigration);
     // await pool.query(uProMigration);
     await pool.query(issueMigration);
     console.log("Tables dropped");
@@ -20,9 +20,10 @@ const dropping = async () => {
 const insertData = async () => {
   const adminInsert = `INSERT INTO users(first_name,last_name,email,organisation,representative,isAdmin) 
   VALUES('Charles','NDAYISABA','nccharles1@gmail.com','Issue Tracker','',true)`;
-
   try {
-    await pool.query(adminInsert);
+    // await pool.query(adminInsert);
+    // await pool.query(issueInsert);
+    // await pool.query(updateUser);
     console.log("Data Inserted");
   } catch (err) {
     console.log(`${err}, Inserted failed`);
@@ -67,8 +68,8 @@ const createAllTables = async () => {
 };
 
 const trackerTables = async () => {
-  await dropping();
-  await createAllTables();
+  // await dropping();
+  // await createAllTables();
   await insertData();
   await process.exit(0);
 };
