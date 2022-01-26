@@ -1,18 +1,18 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
-
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    type: 'OAuth2',
+    user: process.env.SENDER_EMAIL,
+    pass: process.env.SENDER_PSWD,
+    clientId: process.env.OAUTH_CLIENTID,
+    clientSecret: process.env.OAUTH_CLIENT_SECRET,
+    refreshToken: process.env.OAUTH_REFRESH_TOKEN
+  },
+});
 const sendEmail = (sender, email, key, url) => {
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: process.env.SENDER_EMAIL,
-      pass: process.env.SENDER_PSWD,
-      clientId: process.env.OAUTH_CLIENTID,
-      clientSecret: process.env.OAUTH_CLIENT_SECRET,
-      refreshToken: process.env.OAUTH_REFRESH_TOKEN
-    },
-  });
+  
   const mailOptions ={
     from: `"Issue Tracker 👻" <${process.env.SENDER_EMAIL}>`, // sender address
     to: email, // list of receivers
@@ -31,17 +31,6 @@ const sendEmail = (sender, email, key, url) => {
 };
 
 const sendPasscode = (receiver) => {
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: process.env.SENDER_EMAIL,
-      pass: process.env.SENDER_PSWD,
-      clientId: process.env.OAUTH_CLIENTID,
-      clientSecret: process.env.OAUTH_CLIENT_SECRET,
-      refreshToken: process.env.OAUTH_REFRESH_TOKEN
-    },
-  });
   const mailOptions ={
     from: `"PASSCODE | Issue Tracker 👻" <${process.env.SENDER_EMAIL}>`, // sender address
     to: receiver.email, // list of receivers
