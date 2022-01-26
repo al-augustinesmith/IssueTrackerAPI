@@ -60,9 +60,7 @@ export default class User {
       const condition = `WHERE email='${email}' AND projectID='${projectID}'`;
       db.dataCreate(res, table, columns, values, condition)
         .then((response) => {
-          sendEmail({ first_name, last_name }, email, invite_key, url).catch(
-            console.error
-          );
+          sendEmail({ first_name, last_name }, email, invite_key, url);
           return response;
         })
         .catch((err) => {
