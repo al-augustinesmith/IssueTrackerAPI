@@ -3,12 +3,12 @@ import "dotenv/config";
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    type: 'OAuth2',
+    // type: 'OAuth2',
     user: process.env.SENDER_EMAIL,
     pass: process.env.SENDER_PSWD,
-    clientId: process.env.OAUTH_CLIENTID,
-    clientSecret: process.env.OAUTH_CLIENT_SECRET,
-    refreshToken: process.env.OAUTH_REFRESH_TOKEN
+    // clientId: process.env.OAUTH_CLIENTID,
+    // clientSecret: process.env.OAUTH_CLIENT_SECRET,
+    // refreshToken: process.env.OAUTH_REFRESH_TOKEN
   },
 });
 const sendEmail = (sender, email, key, url) => {
